@@ -24,7 +24,7 @@ function App({ host }: { host: string }) {
     <div class="mx-auto md:max-w-screen-md max-w-full px-4 pt-4 h-screen">
       <div class="flex flex-col justify-between w-full h-full">
         {/* Search bar */}
-        <Search query={ws.requestTrack.bind(ws)} />
+        <Search ws={ws} />
         {/* Currently playing */}
         <div class="rounded-lg p-4 bg-blue-900 flex flex-row">
           {/* Track Info */}

@@ -1,23 +1,35 @@
 import { h } from "preact";
-import { Selector } from "./server/ws";
+import WS, { Selector, OpClientRequestTrack, Message } from "./server/ws";
 import { useState, useEffect } from "preact/hooks";
+import TrackMetadata from "./server/track";
 
 /**
  * The search interface.
  */
-export default function Search({
-  query,
-}: {
-  query: (query: string, selector: Selector) => void;
-}) {
+export default function Search({ ws }: { ws: WS }) {
+  /// State: status of the search
+  const [status, setStatus] = useState<SearchStatusProps | null>(null);
+  /// Effect: search status messages's listener
+  useEffect(() => {
+    const fn = (m: Message) => {
+      if (m.op !== OpClientRequestTrack) return;
+      setStatus(m);
+      setTimeout(() => setStatus((prev) => (prev === m ? null : prev)), 3000);
+    };
+    return ws.addMessageHandler(fn);
+  }, [ws]);
+  // Effect: "send query" binder
+  const query = (query: string, s: Selector) => {
+    setStatus({ query });
+    return ws.requestTrack(query, s);
+  };
+
   return (
     <div>
       <div class="z-10 relative">
         <SearchBar query={query} />
       </div>
-      <div class="z-0 relative">
-        <SearchStatus />
-      </div>
+      <div class="z-0 relative">{status && <SearchStatus {...status} />}</div>
     </div>
   );
 }
@@ -70,25 +82,44 @@ function SearchBar({
   );
 }
 
+type SearchStatusProps =
+  | {
+      success: false;
+      reason: string;
+    }
+  | {
+      success: true;
+      track: TrackMetadata;
+    }
+  | { query: string };
+
 /**
  * Search status bar.
  */
-function SearchStatus({}: {}) {
-  const [show, setShow] = useState(true);
-  useEffect(() => {
-    setTimeout(() => setShow(false), 2000);
-  });
-
+function SearchStatus(props: SearchStatusProps) {
   return (
-    <div class="w-9/12 mx-auto transition-all duration-200">
-      <div
-        class={`pb-4 pt-2 rounded-b-lg bg-blue-900 text-white animate__animated ${
-          show ? "animate__slideInDown" : "animate__slideOutUp"
-        }`}
-      >
-        <p class="px-2 text-xl">Querying...</p>
-        <p class="px-2">Query string</p>
-      </div>
+    <div class="w-9/12 mx-auto pb-4 pt-2 rounded-b-lg bg-blue-900 text-white animate__animated animate__slideInDown">
+      {"query" in props ? (
+        // Query in progress
+        <div>
+          <p class="px-2 text-xl">Querying...</p>
+          <p class="px-2">{props.query}</p>
+        </div>
+      ) : props.success ? (
+        // Succeeded!
+        <div>
+          <p class="px-2 text-green-400 text-xl">Track added!</p>
+          <p class="px-2">
+            {props.track.artist} - {props.track.title}
+          </p>
+        </div>
+      ) : (
+        // Failed
+        <div>
+          <p class="px-2 text-red-600 text-xl">Query failed</p>
+          <p class="px-2">{props.reason}</p>
+        </div>
+      )}
     </div>
   );
 }
