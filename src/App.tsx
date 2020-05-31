@@ -1,7 +1,8 @@
 import { h } from "preact";
-import { useState } from "preact/hooks";
+import { useState, useEffect } from "preact/hooks";
 import WS from "./server/ws";
 import Search from "./Search";
+import NowPlaying from "./NowPlaying";
 
 /**
  * Main app.
@@ -12,6 +13,10 @@ function App({ host }: { host: string }) {
   /// The websocket connection.
   const newWs = () => new WS(`${host.replace(/^http/, "ws")}/status`);
   const [ws, setWs] = useState(newWs());
+  /// Effect: reload ws
+  useEffect(() => {
+    ws.addEventListener("close", () => setWs(newWs()), {once: true});
+  }, [ws]);
   /// Current track information.
   // const [currentTrack, setCurrentTrack] = useState<TrackMetadata | null>(null);
   /// Queue
@@ -26,66 +31,7 @@ function App({ host }: { host: string }) {
         {/* Search bar */}
         <Search ws={ws} />
         {/* Currently playing */}
-        <div class="rounded-lg p-4 bg-blue-900 flex flex-row">
-          {/* Track Info */}
-          <div class="flex flex-col justify-between flex-grow text-gray-400">
-            <p class="text-xl text-red-600">Track name</p>
-            <p>Track artist</p>
-            <p>Listeners: 1</p>
-          </div>
-          {/* Play/Pause */}
-          <div class="flex-shrink-0 w-16">
-            <svg
-              class="w-full h-full"
-              xmlns="http://www.w3.org/2000/svg"
-              xmlnsXlink="http://www.w3.org/1999/xlink"
-              version="1.1"
-              x="0px"
-              y="0px"
-              viewBox="0 0 250.488 250.488"
-              xmlSpace="preserve"
-            >
-              <g
-                class="stroke-current stroke-15 fill-bg text-gray-400 hover:text-red-600 stroke-2 cursor-pointer"
-                transform="translate(75,65) scale(0.5)"
-              >
-                <path
-                  style="fill-rule:evenodd;clip-rule:evenodd;"
-                  d="M203.791,99.628L49.307,2.294c-4.567-2.719-10.238-2.266-14.521-2.266   c-17.132,0-17.056,13.227-17.056,16.578v198.94c0,2.833-0.075,16.579,17.056,16.579c4.283,0,9.955,0.451,14.521-2.267   l154.483-97.333c12.68-7.545,10.489-16.449,10.489-16.449S216.471,107.172,203.791,99.628z"
-                />
-              </g>
-              {/* <g
-                class="stroke-current stroke-15 fill-bg text-gray-400 hover:text-red-600 stroke-2 cursor-pointer"
-                transform="translate(75,65) scale(0.5)"
-              >
-                <path
-                  style="fill-rule:evenodd;clip-rule:evenodd;"
-                  d="M80.543,0H35.797c-9.885,0-17.898,8.014-17.898,17.898v196.883   c0,9.885,8.013,17.898,17.898,17.898h44.746c9.885,0,17.898-8.013,17.898-17.898V17.898C98.44,8.014,90.427,0,80.543,0z M196.882,0   h-44.746c-9.886,0-17.899,8.014-17.899,17.898v196.883c0,9.885,8.013,17.898,17.899,17.898h44.746   c9.885,0,17.898-8.013,17.898-17.898V17.898C214.781,8.014,206.767,0,196.882,0z"
-                />
-              </g> */}
-            </svg>
-          </div>
-          {/* Skip */}
-          <div class="flex-shrink-0 w-16">
-            <svg
-              class="w-full h-full"
-              xmlns="http://www.w3.org/2000/svg"
-              xmlnsXlink="http://www.w3.org/1999/xlink"
-              version="1.1"
-              x="0px"
-              y="0px"
-              viewBox="0 0 250.488 250.488"
-              xmlSpace="preserve"
-            >
-              <g
-                class="stroke-current stroke-15 fill-bg text-gray-400 hover:text-red-600 stroke-2 cursor-pointer"
-                transform="translate(65,65) scale(0.5)"
-              >
-                <path d="M242.381,110.693L140.415,24.591c-3.48-2.406-7.805-2.005-11.071-2.005   c-13.061,0-13.003,11.7-13.003,14.666v65.249l-92.265-77.91c-3.482-2.406-7.807-2.005-11.072-2.005   C-0.057,22.587,0,34.287,0,37.252v175.983c0,2.507-0.057,14.666,13.004,14.666c3.265,0,7.59,0.401,11.072-2.005l92.265-77.91   v65.249c0,2.507-0.058,14.666,13.003,14.666c3.266,0,7.591,0.401,11.071-2.005l101.966-86.101   c9.668-6.675,7.997-14.551,7.997-14.551S252.049,117.367,242.381,110.693z" />
-              </g>
-            </svg>
-          </div>
-        </div>
+        <NowPlaying ws={ws} host={host} />
         {/* Queue */}
         <div class="rounded-t-lg pt-4 bg-blue-900 bg-opacity-75 text-gray-400 ">
           <p class="mx-4 mb-2 text-2xl">In Queue</p>

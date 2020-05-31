@@ -23,5 +23,8 @@
     "build": "parcel build index.html",
     "dev": "parcel serve index.html",
     "fmt": "prettier index.html src/**/*"
-  }
+  },
+  "browserslist": [
+    "> 5%"
+  ]
 }
