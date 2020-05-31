@@ -1,6 +1,7 @@
 import { h } from "preact";
 import { useState } from "preact/hooks";
 import WS from "./server/ws";
+import Search from "./Search";
 
 /**
  * Main app.
@@ -23,21 +24,7 @@ function App({ host }: { host: string }) {
     <div class="mx-auto md:max-w-screen-md max-w-full px-4 pt-4 h-screen">
       <div class="flex flex-col justify-between w-full h-full">
         {/* Search bar */}
-        <div class="bg-transparent text-white flex flex-row">
-          <div class="flex-shrink-0 hover:bg-white rounded-l-lg border-white border py-2 w-12 cursor-pointer text-center hover:text-black">
-            DZ
-          </div>
-          <div class="flex-shrink-0 hover:bg-white border-white border py-2 w-12 cursor-pointer text-center hover:text-black">
-            CSN
-          </div>
-          <div class="flex-shrink-0 hover:bg-white border-white border py-2 w-12 cursor-pointer text-center hover:text-black">
-            YT
-          </div>
-          <input
-            class="outline-none border-white rounded-r-lg hover:rounded-none focus:rounded-none border hover:border-t-0 hover:border-r-0 focus:border-t-0 focus:border-r-0 w-full bg-transparent px-8 hover:px-2 focus:px-2 hover:mr-6 focus:mr-6 transition-all duration-100"
-            placeholder="Search"
-          />
-        </div>
+        <Search query={ws.requestTrack.bind(ws)} />
         {/* Currently playing */}
         <div class="rounded-lg p-4 bg-blue-900 flex flex-row">
           {/* Track Info */}

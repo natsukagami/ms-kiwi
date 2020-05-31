@@ -71,13 +71,14 @@ interface Query {
   selector?: Selector;
 }
 
-export const SelectorDeezer = 1;
-export const SelectorCSN = 2;
-export const SelectorYoutube = 3;
-type Selector =
-  | typeof SelectorDeezer
-  | typeof SelectorCSN
-  | typeof SelectorYoutube;
+/**
+ * The selector object.
+ */
+export enum Selector {
+  DZ = 1,
+  CSN = 2,
+  YT = 3,
+}
 
 /** Message represents all kinds of messages sent from the server. */
 export type Message =
