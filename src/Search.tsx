@@ -1,12 +1,32 @@
 import { h } from "preact";
 import { Selector } from "./server/ws";
-import { useState } from "preact/hooks";
+import { useState, useEffect } from "preact/hooks";
+
+/**
+ * The search interface.
+ */
+export default function Search({
+  query,
+}: {
+  query: (query: string, selector: Selector) => void;
+}) {
+  return (
+    <div>
+      <div class="z-10 relative">
+        <SearchBar query={query} />
+      </div>
+      <div class="z-0 relative">
+        <SearchStatus />
+      </div>
+    </div>
+  );
+}
 
 /**
  * The search bar.
  * @param query The "call a query" function.
  */
-export default function Search({
+function SearchBar({
   query,
 }: {
   query: (query: string, selector: Selector) => void;
@@ -47,6 +67,29 @@ export default function Search({
         onChange={(e) => setValue((e.target as HTMLInputElement).value)}
       />
     </form>
+  );
+}
+
+/**
+ * Search status bar.
+ */
+function SearchStatus({}: {}) {
+  const [show, setShow] = useState(true);
+  useEffect(() => {
+    setTimeout(() => setShow(false), 2000);
+  });
+
+  return (
+    <div class="w-9/12 mx-auto transition-all duration-200">
+      <div
+        class={`pb-4 pt-2 rounded-b-lg bg-blue-900 text-white animate__animated ${
+          show ? "animate__slideInDown" : "animate__slideOutUp"
+        }`}
+      >
+        <p class="px-2 text-xl">Querying...</p>
+        <p class="px-2">Query string</p>
+      </div>
+    </div>
   );
 }
 

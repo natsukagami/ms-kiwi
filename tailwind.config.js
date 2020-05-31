@@ -23,5 +23,9 @@ module.exports = {
     borderRadius: ["responsive", "hover", "focus"],
     height: ["responsive", "hover", "focus"],
   },
-  plugins: [],
+  plugins: [
+    require("tailwindcss-animatecss")({
+      variants: ["responsive", "hover", "reduced-motion"],
+    }),
+  ],
 };
