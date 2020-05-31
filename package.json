@@ -1,0 +1,10 @@
+{
+  "name": "ms-kiwi",
+  "version": "0.1.0",
+  "description": "A simple React theme for MusicStream",
+  "main": "build/index.ts",
+  "repository": "https://github.com/natsukagami/ms-kiwi",
+  "author": "Natsu Kagami <natsukagami@gmail.com>",
+  "license": "AGPL v3.0",
+  "private": false
+}
