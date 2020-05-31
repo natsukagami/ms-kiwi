@@ -5,6 +5,22 @@
   "main": "build/index.ts",
   "repository": "https://github.com/natsukagami/ms-kiwi",
   "author": "Natsu Kagami <natsukagami@gmail.com>",
-  "license": "AGPL v3.0",
-  "private": false
+  "license": "AGPL-3.0-only",
+  "private": false,
+  "devDependencies": {
+    "parcel-bundler": "^1.12.4",
+    "prettier": "^2.0.5"
+  },
+  "dependencies": {
+    "autoprefixer": "^9.8.0",
+    "postcss-modules": "^2.0.0",
+    "preact": "^10.4.4",
+    "tailwindcss": "^1.4.6",
+    "typescript": "^3.9.3"
+  },
+  "scripts": {
+    "build": "parcel build index.html",
+    "dev": "parcel serve index.html",
+    "fmt": "prettier index.html src/**/*"
+  }
 }
