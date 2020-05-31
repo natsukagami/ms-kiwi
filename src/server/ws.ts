@@ -17,11 +17,14 @@ export default class WS extends WebSocket {
    * @param fn The message handler.
    * @returns The remove handler function.
    */
-  addMessageHandler(fn: (this: WS, m: Message) => void) {
+  addMessageHandler(
+    fn: (this: WS, m: Message) => void,
+    opts?: AddEventListenerOptions | boolean
+  ) {
     const f = (me: MessageEvent) => {
       fn.call(this, JSON.parse(me.data));
     };
-    super.addEventListener("message", f);
+    super.addEventListener("message", f, opts);
     return () => super.removeEventListener("message", f);
   }
 

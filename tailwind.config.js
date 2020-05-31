@@ -5,6 +5,8 @@ module.exports = {
     fill: (theme) => ({
       current: "currentColor",
       bg: theme("colors.blue.900"),
+      red: theme("colors.red.600"),
+      green: theme("colors.green.600"),
     }),
     extend: {
       spacing: {

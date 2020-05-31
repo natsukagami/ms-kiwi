@@ -1,5 +1,10 @@
 import { h } from "preact";
-import WS, { OpSetClientsTrack } from "./server/ws";
+import WS, {
+  OpSetClientsTrack,
+  OpClientRequestSkip,
+  OpSetClientsListeners,
+  OpAllClientsSkip,
+} from "./server/ws";
 import { useState, useEffect } from "preact/hooks";
 import TrackMetadata from "./server/track";
 import Track from "./TrackInfo";
@@ -16,10 +21,16 @@ export default function NowPlaying({ ws, host }: { ws: WS; host: string }) {
   // Effect: trace the currently playing track.
   useEffect(() => {
     const remove = ws.addMessageHandler((m) => {
-      if (m.op !== OpSetClientsTrack) return;
-      console.log(m);
-      setCurrentTrack(m.track);
-      setListeners(m.listeners);
+      switch (m.op) {
+        case OpSetClientsTrack:
+          console.log(m);
+          setCurrentTrack(m.track);
+          setListeners(m.listeners);
+          return;
+        case OpSetClientsListeners:
+          setListeners(m.listeners);
+          return;
+      }
     });
     ws.readyState === ws.OPEN && ws.getPlaying(); // Don't rely on the websocket connection to send you stuff first.
     return remove;
@@ -37,11 +48,11 @@ export default function NowPlaying({ ws, host }: { ws: WS; host: string }) {
       </div>
       {/* Play/Pause */}
       <div class="flex-shrink-0 w-16">
-        <AudioHandle host={host} />
+        <AudioHandle ws={ws} host={host} />
       </div>
       {/* Skip */}
       <div class="flex-shrink-0 w-16">
-        <SkipBtn onClick={() => {}} />
+        <Skip ws={ws} />
       </div>
     </div>
   );
@@ -50,12 +61,12 @@ export default function NowPlaying({ ws, host }: { ws: WS; host: string }) {
 /**
  * The component that controls audio.
  */
-function AudioHandle({ host }: { host: string }) {
+function AudioHandle({ ws, host }: { ws: WS; host: string }) {
   // State: audio!
   const [audio, setAudio] = useState(() => new Audio(`${host}/audio`));
   // State: are we paused?
   // can't really use the audio... we don't know if it's changed.
-  const [paused, setPaused] = useState<boolean>(audio.paused);
+  const [paused, setPaused] = useState(true);
   const [loading, setLoading] = useState(false);
   // Effect: reload on unload
   useEffect(() => {
@@ -65,10 +76,22 @@ function AudioHandle({ host }: { host: string }) {
       { once: true }
     );
   }, [audio]);
+  // Effect: reload audio on WS track change
+  useEffect(() => {
+    return ws.addMessageHandler((m) => {
+      if (m.op !== OpSetClientsTrack) return;
+      audio.pause();
+      audio.load();
+      setPaused((paused) => {
+        if (!paused) audio.play();
+        return paused;
+      });
+    });
+  }, [ws]);
 
-  const toggle = async () => {
+  const toggle = () => {
     setLoading(true);
-    if (paused) await audio.play();
+    if (paused) audio.play();
     else audio.pause();
     setLoading(false);
     setPaused(!paused);
@@ -79,6 +102,57 @@ function AudioHandle({ host }: { host: string }) {
     <PlayBtn onClick={toggle} disabled={loading} />
   ) : (
     <PauseBtn onClick={toggle} disabled={loading} />
+  );
+}
+
+function Skip({ ws }: { ws: WS }) {
+  // State: either a state of wait (0 or 1), a boolean (success?) or null (nothing).
+  const [status, setStatus] = useState<0 | 1 | boolean | null>(null);
+  const setSkipped = (v: boolean) => {
+    setStatus(v);
+    setTimeout(() => setStatus(null), 3000);
+  };
+  // Effect: listen for global skip
+  useEffect(() => {
+    return ws.addMessageHandler((m) => {
+      if (m.op === OpAllClientsSkip) setSkipped(true);
+    });
+  }, [ws]);
+  // Create a WS request and wait for response.
+  const skip = () => {
+    setStatus(0); // go back and forth between 0 and 1
+    const statusCancel = setInterval(
+      () => setStatus((v) => (v === 0 ? 1 : 0)),
+      500
+    );
+    const cancel = ws.addMessageHandler((m) => {
+      if (m.op === OpClientRequestSkip) {
+        clearInterval(statusCancel);
+        setSkipped(m.success);
+        if (!m.success) console.warn(`Cannot skip: ${m.reason}`);
+        cancel();
+      }
+    });
+    ws.requestSkip();
+  };
+
+  const additionalClasses =
+    typeof status === "boolean"
+      ? status
+        ? "fill-green"
+        : "fill-red"
+      : status === null
+      ? "fill-bg"
+      : status === 0
+      ? "fill-bg"
+      : "fill-current";
+
+  return (
+    <SkipBtn
+      disabled={status !== null}
+      onClick={skip}
+      className={additionalClasses}
+    />
   );
 }
 
@@ -154,7 +228,18 @@ function PauseBtn({ onClick, disabled }: BtnProps) {
 /**
  * Skip button...
  */
-function SkipBtn({ onClick }: { onClick: () => void }) {
+function SkipBtn({
+  onClick,
+  disabled,
+  className = "",
+}: {
+  onClick: () => void;
+  disabled: boolean;
+  className?: string;
+}) {
+  const hoverClass = disabled
+    ? "cursor-not-allowed"
+    : "hover:text-red-600 cursor-pointer";
   return (
     <svg
       class="w-full h-full"
@@ -165,10 +250,10 @@ function SkipBtn({ onClick }: { onClick: () => void }) {
       y="0px"
       viewBox="0 0 250.488 250.488"
       xmlSpace="preserve"
-      onClick={onClick}
+      onClick={disabled ? undefined : onClick}
     >
       <g
-        class="stroke-current stroke-15 fill-bg text-gray-400 hover:text-red-600 stroke-2 cursor-pointer"
+        class={`stroke-current stroke-15 fill-bg text-gray-400 stroke-2 duration-500 transition-all ${hoverClass} ${className}`}
         transform="translate(65,65) scale(0.5)"
       >
         <path d="M242.381,110.693L140.415,24.591c-3.48-2.406-7.805-2.005-11.071-2.005   c-13.061,0-13.003,11.7-13.003,14.666v65.249l-92.265-77.91c-3.482-2.406-7.807-2.005-11.072-2.005   C-0.057,22.587,0,34.287,0,37.252v175.983c0,2.507-0.057,14.666,13.004,14.666c3.265,0,7.59,0.401,11.072-2.005l92.265-77.91   v65.249c0,2.507-0.058,14.666,13.003,14.666c3.266,0,7.591,0.401,11.071-2.005l101.966-86.101   c9.668-6.675,7.997-14.551,7.997-14.551S252.049,117.367,242.381,110.693z" />
