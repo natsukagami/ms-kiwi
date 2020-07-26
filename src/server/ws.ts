@@ -34,37 +34,39 @@ export default class WS extends WebSocket {
 
   /** Requests the current playing track */
   getPlaying() {
-    this.query({ op: OpSetClientsTrack });
+    this.query({ op: Op.SetClientsTrack });
   }
 
   /** Request a track */
   requestTrack(query: string, selector: Selector) {
-    this.query({ op: OpClientRequestTrack, query, selector });
+    let nonce = Math.floor(Math.random()*1e9);
+    this.query({ op: Op.ClientRequestTrack, query, selector, nonce });
+    return nonce;
   }
 
   /** Request a skip */
   requestSkip() {
-    this.query({ op: OpClientRequestSkip });
+    this.query({ op: Op.ClientRequestSkip });
   }
 
   /** Get the amount of listeners */
   getListeners() {
-    this.query({ op: OpSetClientsListeners });
+    this.query({ op: Op.SetClientsListeners });
   }
 
   /** Remove track with given query */
   removeTrack(query: string) {
-    this.query({ op: OpClientRemoveTrack, query });
+    this.query({ op: Op.ClientRemoveTrack, query });
   }
 
   /** Request the queue */
   getQueue() {
-    this.query({ op: OpClientRequestQueue });
+    this.query({ op: Op.ClientRequestQueue });
   }
 
   /** Ping! */
   ping() {
-    this.query({ op: OpClientKeepAlive });
+    this.query({ op: Op.WebSocketKeepAlive });
   }
 }
 
@@ -75,6 +77,17 @@ interface Query {
   op: number;
   query?: string;
   selector?: Selector;
+  nonce?: number
+}
+/**
+ * Data trailer from server.
+ */
+interface MessageData {
+  track?: TrackMetadata;
+  listeners?: number;
+  pos?: number;
+  queue?: TrackMetadata[];
+  silent?: boolean;
 }
 
 /**
@@ -86,77 +99,25 @@ export enum Selector {
   YT = 3,
 }
 
+export enum Op {
+  SetClientsTrack     = 1,
+  AllClientsSkip      = 2,
+  ClientRequestTrack  = 3,
+  ClientRequestSkip   = 4,
+  SetClientsListeners = 5,
+  TrackEnqueued       = 6,
+  ClientRequestQueue  = 7,
+  WebSocketKeepAlive  = 8,
+  ClientRemoveTrack   = 9,
+}
+
 /** Message represents all kinds of messages sent from the server. */
-export type Message =
-  | SetClientsTrack
-  | AllClientsSkip
-  | ClientRequestTrack
-  | ClientRequestSkip
-  | SetClientsListeners
-  | TrackEnqueued
-  | ClientRequestQueue
-  | ClientKeepAlive
-  | ClientRemoveTrack;
+export interface Message {
+  op: Op,
+  success: boolean,
+  reason: string,
+  data: MessageData,
+  nonce: number,
+}
 
-export const OpSetClientsTrack = 1;
-type SetClientsTrack = {
-  op: typeof OpSetClientsTrack;
-  track: TrackMetadata;
-  pos: number;
-  listeners: number;
-};
 
-export const OpAllClientsSkip = 2;
-type AllClientsSkip = {
-  op: typeof OpAllClientsSkip;
-};
-
-export const OpClientRequestTrack = 3;
-type ClientRequestTrack = {
-  op: typeof OpClientRequestTrack;
-} & (
-  | {
-      success: false;
-      reason: string;
-    }
-  | {
-      success: true;
-      track: TrackMetadata;
-    }
-);
-
-export const OpClientRequestSkip = 4;
-type ClientRequestSkip = {
-  op: typeof OpClientRequestSkip;
-} & ({ success: false; reason: string } | { success: true });
-
-export const OpSetClientsListeners = 5;
-type SetClientsListeners = {
-  op: typeof OpSetClientsListeners;
-  listeners: number;
-};
-
-export const OpTrackEnqueued = 6;
-type TrackEnqueued = {
-  op: typeof OpTrackEnqueued;
-  track: TrackMetadata;
-};
-
-export const OpClientRequestQueue = 7;
-type ClientRequestQueue = {
-  op: typeof OpClientRequestQueue;
-  queue: TrackMetadata[];
-};
-
-export const OpClientKeepAlive = 8;
-type ClientKeepAlive = {
-  op: typeof OpClientKeepAlive;
-};
-
-export const OpClientRemoveTrack = 9;
-type ClientRemoveTrack = {
-  op: typeof OpClientRemoveTrack;
-} & (
-  | { success: false; reason?: string }
-  | { success: true; track: TrackMetadata; silent?: true }
-);

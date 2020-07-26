@@ -1,5 +1,5 @@
 import { h } from "preact";
-import WS, { Selector, OpClientRequestTrack, Message } from "./server/ws";
+import WS, { Selector, Op, Message } from "./server/ws";
 import { useState, useEffect } from "preact/hooks";
 import TrackMetadata from "./server/track";
 
@@ -12,7 +12,7 @@ export default function Search({ ws }: { ws: WS }) {
   /// Effect: search status messages's listener
   useEffect(() => {
     const fn = (m: Message) => {
-      if (m.op !== OpClientRequestTrack) return;
+      if (m.op !== Op.ClientRequestTrack) return;
       setStatus(m);
       setTimeout(() => setStatus((prev) => (prev === m ? null : prev)), 3000);
     };
@@ -63,17 +63,17 @@ function SearchBar({
   ) as (keyof typeof Selector)[];
 
   return (
-    <form class="bg-transparent text-white flex flex-row" onSubmit={onSubmit}>
+    <form class="bg-transparent text-white flex flex-row mt-1 leading-6" onSubmit={onSubmit}>
       {selectors.map((s, index) => (
         <SelectBtn
           selected={sel === Selector[s]}
           set={() => setSel(Selector[s])}
           text={s}
-          class={index === 0 ? "rounded-l-lg" : ""}
+          class={index === 0 ? "rounded-l" : ""}
         />
       ))}
       <input
-        class="outline-none border-white rounded-r-lg hover:rounded-none focus:rounded-none border hover:border-t-0 hover:border-r-0 focus:border-t-0 focus:border-r-0 w-full bg-transparent px-8 hover:px-2 focus:px-2 hover:mr-6 focus:mr-6 transition-all duration-100"
+        class="outline-none border-white rounded-r hover:rounded-none border hover:border-t-transparent hover:border-r-transparent w-full bg-transparent px-8 hover:px-2 hover:mr-6 transition-all ease-in-out duration-200"
         placeholder="Search"
         value={value}
         onChange={(e) => setValue((e.target as HTMLInputElement).value)}
@@ -84,12 +84,11 @@ function SearchBar({
 
 type SearchStatusProps =
   | {
-      success: false;
+      success: boolean;
       reason: string;
-    }
-  | {
-      success: true;
-      track: TrackMetadata;
+      data: {
+        track?: TrackMetadata;
+      };
     }
   | { query: string };
 
@@ -98,7 +97,7 @@ type SearchStatusProps =
  */
 function SearchStatus(props: SearchStatusProps) {
   return (
-    <div class="w-9/12 mx-auto pb-4 pt-2 rounded-b-lg bg-blue-900 text-white animate__animated animate__slideInDown">
+    <div class="w-9/12 mx-auto py-5 pb-5 pt-2 rounded-b bg-blue text-white animate__animated animate__slideInDown">
       {"query" in props ? (
         // Query in progress
         <div>
@@ -108,15 +107,15 @@ function SearchStatus(props: SearchStatusProps) {
       ) : props.success ? (
         // Succeeded!
         <div>
-          <p class="px-2 text-green-400 text-xl">Track added!</p>
+          <p class="px-2 text-green text-xl">Track added!</p>
           <p class="px-2">
-            {props.track.artist} - {props.track.title}
+            {props.data.track!.artist} - {props.data.track!.title}
           </p>
         </div>
       ) : (
         // Failed
         <div>
-          <p class="px-2 text-red-600 text-xl">Query failed</p>
+          <p class="px-2 text-red text-xl">Query failed</p>
           <p class="px-2">{props.reason}</p>
         </div>
       )}
@@ -140,11 +139,11 @@ function SelectBtn({
   set: () => void;
   text: string;
 } & h.JSX.HTMLAttributes<HTMLDivElement>) {
-  const selectedClass = selected ? "bg-white text-black" : "";
+  const selectedClass = selected ? "bg-white text-blue" : "";
   return (
     <div
       {...rest}
-      class={`flex-shrink-0 hover:bg-white border-white border py-2 w-12 cursor-pointer text-center hover:text-black ${selectedClass} ${rest.class}`}
+      class={`flex-shrink-0 hover:bg-white border-white border py-2 w-12 cursor-pointer text-center hover:text-blue ${selectedClass} ${rest.class}`}
       onClick={set}
     >
       {text}

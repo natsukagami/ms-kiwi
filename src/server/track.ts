@@ -13,6 +13,7 @@ export default interface TrackMetadata {
   playId: string;
   spotifyURI: string;
   id: string;
+  href: string;
 }
 
 /**

@@ -3,3 +3,20 @@
 @tailwind components;
 
 @tailwind utilities;
+
+input {
+  -webkit-appearance: none;
+}
+
+.hover\:border-l-transparent:hover {
+  border-left-color: transparent;
+}
+.hover\:border-r-transparent:hover {
+  border-right-color: transparent;
+}
+.hover\:border-t-transparent:hover {
+  border-top-color: transparent;
+}
+.hover\:border-b-transparent:hover {
+  border-bottom-color: transparent;
+}

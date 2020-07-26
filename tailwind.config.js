@@ -2,11 +2,23 @@
 module.exports = {
   purge: ["./src/**/*.ts", "./src/**/*.tsx"],
   theme: {
+    colors: {
+      blue: '#1b2b40',
+      red: '#d92b3a',
+      white: '#c2c6cf',
+      transparent: 'transparent',
+    },
+    borderRadius: {
+      'none': "0px",
+      default: "15px",
+    },
     fill: (theme) => ({
       current: "currentColor",
-      bg: theme("colors.blue.900"),
-      red: theme("colors.red.600"),
-      green: theme("colors.green.600"),
+      bg: theme("colors.blue"),
+      red: theme("colors.red"),
+      white: theme("colors.white"),
+      green: theme("colors.green"),
+      transparent: theme("colors.transparent"),
     }),
     extend: {
       spacing: {
@@ -17,6 +29,14 @@ module.exports = {
         "15": "15",
       },
     },
+    maxHeight: {
+      '0': '0',
+      '1/4': '25%',
+      '1/3': '33%',
+      '1/2': '50%',
+      '3/4': '75%',
+      'full': '100%',
+    },
   },
   variants: {
     borderWidth: ["responsive", "hover", "focus"],
@@ -24,6 +44,7 @@ module.exports = {
     margin: ["responsive", "hover", "focus"],
     borderRadius: ["responsive", "hover", "focus"],
     height: ["responsive", "hover", "focus"],
+    maxHeight: ['responsive', 'hover', 'focus'],
   },
   plugins: [
     require("tailwindcss-animatecss")({
