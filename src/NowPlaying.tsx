@@ -146,7 +146,7 @@ function LyricsHandle({ ws, audio }: { ws: WS; audio: AS }) {
   if (lyrics === null || currentLine <= 0 || currentLine >= lyrics.length) return null;
 
   return (
-    <div class="w-11/12 z-0 bg-blue bg-opacity-75 py-5 pb-5 pt-2 self-center rounded-b text-white animate__animated animate__slideInDown">
+    <div class="w-11/12 z-0 bg-blue bg-opacity-75 py-5 pb-5 pt-2 self-center rounded-b text-white animate__animated animate__slideInDown overflow-y-hidden">
       <p class="px-2 text-xl text-red">{!!lyrics![currentLine - 1].text ? lyrics![currentLine - 1].text : lyrics![currentLine - 1].original}</p>
       <p class="px-2">{lyrics![currentLine - 1].translated}</p>
     </div>

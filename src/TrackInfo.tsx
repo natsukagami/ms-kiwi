@@ -13,7 +13,7 @@ export default function Track({
   listeners?: number;
 }) {
   return (
-    <div class="flex flex-col justify-between text-white">
+    <div class="flex flex-col justify-between text-white overflow-y-hidden">
       <a class="text-xl text-red" href={ !!track.href ? track.href : "#" }>{track.title}</a>
       <p>{track.artist}</p>
       {listeners === undefined || <p>Listeners: {listeners}</p>}
