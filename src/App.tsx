@@ -31,10 +31,8 @@ function App({ host }: { host: string }) {
       <div class="w-full h-full flex flex-col">
         {/* Search bar */}
         <Search ws={ws} />
-        <div class="flex-grow" />
         {/* Currently playing */}
         <NowPlaying ws={ws} host={host} />
-        <div class="flex-grow" />
         {/* Queue */}
         <Queue ws={ws} />
       </div>

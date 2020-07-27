@@ -34,7 +34,7 @@ export default function Queue({ ws }: { ws: WS }) {
   // Don't display anything if there's no tracks in queue.
   if (currentQueue === null || currentQueue.length <= 0) return null;
   return (
-    <div class="max-h-1/3 rounded-t pt-4 flex flex-col flex-grow bg-blue bg-opacity-75 text-white animate__animated animate__slideInUp">
+    <div class="overflow-x-auto rounded-t pt-4 flex flex-col flex-grow bg-blue bg-opacity-75 text-white animate__animated animate__slideInUp">
       <p class="mx-4 mb-2 text-2xl">In Queue</p>
       {/* List */}
       <div class="flex-grow divide-y divide-white overflow-y-auto overflow-x-scroll scrolling-touch transition-all duration-200">

@@ -25,11 +25,11 @@ export default function Search({ ws }: { ws: WS }) {
   };
 
   return (
-    <div>
-      <div class="z-10 relative">
+    <div class="flex-grow-0 h-32 overflow-x-hidden">
+      <div class="z-20 relative">
         <SearchBar query={query} />
       </div>
-      <div class="z-0 relative">{status && <SearchStatus {...status} />}</div>
+      <div class="z-auto relative block">{status && <SearchStatus {...status} />}</div>
     </div>
   );
 }

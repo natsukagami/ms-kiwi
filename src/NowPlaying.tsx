@@ -47,7 +47,7 @@ export default function NowPlaying({ ws, host }: { ws: WS; host: string }) {
   if (currentTrack === null) return null;
 
   return (
-    <div class="flex flex-col flex-grow">
+    <div class="flex flex-col h-64 justify-center overflow-x-visible">
       <ErrorMessageHandle ws={ws} />
       <div class="rounded p-4 bg-blue flex flex-row z-10 transition-all ease-in-out duration-1000 animate__animated">
         {/* Track Info */}
@@ -96,7 +96,7 @@ function ErrorMessageHandle({ ws }: { ws: WS }) {
   //Render!
   if (activeMsg === null) return null;
   return (
-    <div class="mx-auto z-0 bg-blue bg-opacity-75 py-5 pt-5 pt-2 self-center rounded-t text-white animate__animated animate__slideInUp">
+    <div class="block mx-auto z-0 bg-blue bg-opacity-75 py-5 pt-5 pt-2 self-center rounded-t text-white animate__animated animate__slideInUp">
       <p class="px-2 text-xl text-red">{activeMsg.reason}</p>
     </div>
   )
