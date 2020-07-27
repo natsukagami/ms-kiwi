@@ -20,3 +20,30 @@ input {
 .hover\:border-b-transparent:hover {
   border-bottom-color: transparent;
 }
+.notplaceholder\:rounded-none:not(:placeholder-shown) {
+  border-radius: 0;
+}
+.notplaceholder\:mr-6:not(:placeholder-shown) {
+  margin-right: 1.5rem;
+}
+.notplaceholder\:border-t-transparent:not(:placeholder-shown) {
+  border-top-color: transparent;
+}
+.notplaceholder\:border-r-transparent:not(:placeholder-shown) {
+  border-right-color: transparent;
+}
+.notplaceholder\:px-2:not(:placeholder-shown) {
+  padding-right: 0.5rem;
+  padding-left: 0.5rem;
+}
+
+@import url("https://fonts.googleapis.com/css?family=Fira+Sans");
+html {
+  background-image: url("../static/background.png");
+  background-size: cover;
+  background-position: top;
+  overflow: hidden;
+  font-family: "Fira Sans", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

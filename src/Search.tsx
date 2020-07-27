@@ -73,7 +73,7 @@ function SearchBar({
         />
       ))}
       <input
-        class="outline-none border-white rounded-r hover:rounded-none border hover:border-t-transparent hover:border-r-transparent w-full bg-transparent px-8 hover:px-2 hover:mr-6 transition-all ease-in-out duration-200"
+        class="outline-none border-white rounded-r border w-full bg-transparent px-8 hover:px-2 transition-all ease-in-out duration-200 hover:mr-6 hover:rounded-none hover:border-t-transparent hover:border-r-transparent notplaceholder:rounded-none notplaceholder:mr-6 notplaceholder:border-t-transparent notplaceholder:border-r-transparent notplaceholder:px-2"
         placeholder="Search"
         value={value}
         onChange={(e) => setValue((e.target as HTMLInputElement).value)}
@@ -143,7 +143,7 @@ function SelectBtn({
   return (
     <div
       {...rest}
-      class={`flex-shrink-0 hover:bg-white border-white border py-2 w-12 cursor-pointer text-center hover:text-blue ${selectedClass} ${rest.class}`}
+      class={`flex-shrink-0 hover:bg-white border-white border py-2 w-12 cursor-pointer text-center hover:text-blue .leading-4 ${selectedClass} ${rest.class}`}
       onClick={set}
     >
       {text}
