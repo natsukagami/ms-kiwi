@@ -10,7 +10,8 @@ module.exports = {
     },
     borderRadius: {
       'none': "0px",
-      default: "15px",
+      '15': '15px',
+      default: "20px",
     },
     fill: (theme) => ({
       current: "currentColor",

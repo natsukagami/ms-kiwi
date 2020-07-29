@@ -1,6 +1,5 @@
 import TrackMetadata from "./track";
-import { Op, Message } from "./ws";
-import Track from "../TrackInfo";
+import WS, { Op, Message } from "./ws";
 
 export default class AS extends Audio {
   host: string;
@@ -8,10 +7,14 @@ export default class AS extends Audio {
   diff: number;
   isFallback: boolean;
   wasSkipped: boolean;
-  constructor(host: string) {
+  audioStartPos: number;
+  constructor({ ws, host }: { ws: WS; host: string }) {
     super();
+    Object.setPrototypeOf(this, AS.prototype);
+    ws.addMessageHandler((m) => this.handleMessage(m));
     this.host = host;
     this.diff = 0;
+    this.audioStartPos = 0;
     this.wasSkipped = false;
     this.crossOrigin = "anonymous";
     this.preload = "auto";
@@ -37,13 +40,20 @@ export default class AS extends Audio {
     if (!this.src) this.reload();
   }
   currentTrackTime() {
-    return this.currentTime - this.diff;
+    return this.currentTime - this.diff + this.audioStartPos;
   }
   handleMessage(m: Message) {
     if (m.op == Op.AllClientsSkip) {
       this.wasSkipped = true;
       return;
     }
+    if (m.op == Op.ClientAudioStartPos) {
+      if (eval("!window.chrome")) {
+        this.audioStartPos = m.data.startPos!;
+      }
+      return;
+    }
+    if (m.op != Op.SetClientsTrack) return;
     let delta = m.data.pos! / 48000.0 + 1.584;
     this.diff = delta - this.currentTime;
     if (

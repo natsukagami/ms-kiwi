@@ -1,3 +1,5 @@
+
+@import url("https://fonts.googleapis.com/css?family=Fira+Sans");
 @tailwind base;
 
 @tailwind components;
@@ -37,7 +39,6 @@ input {
   padding-left: 0.5rem;
 }
 
-@import url("https://fonts.googleapis.com/css?family=Fira+Sans");
 html {
   background-image: url("../static/background.png");
   background-size: cover;

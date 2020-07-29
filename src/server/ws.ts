@@ -10,6 +10,7 @@ export default class WS extends WebSocket {
    */
   constructor(host: string) {
     super(host);
+    Object.setPrototypeOf(this, WS.prototype);
   }
 
   /**
@@ -88,6 +89,7 @@ interface MessageData {
   pos?: number;
   queue?: TrackMetadata[];
   silent?: boolean;
+  startPos?: number;
 }
 
 /**
@@ -109,6 +111,7 @@ export enum Op {
   ClientRequestQueue  = 7,
   WebSocketKeepAlive  = 8,
   ClientRemoveTrack   = 9,
+  ClientAudioStartPos = 10,
 }
 
 /** Message represents all kinds of messages sent from the server. */

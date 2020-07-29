@@ -69,11 +69,11 @@ function SearchBar({
           selected={sel === Selector[s]}
           set={() => setSel(Selector[s])}
           text={s}
-          class={index === 0 ? "rounded-l" : ""}
+          class={index === 0 ? "rounded-l-15" : ""}
         />
       ))}
       <input
-        class="outline-none border-white rounded-r border w-full bg-transparent px-8 hover:px-2 transition-all ease-in-out duration-200 hover:mr-6 hover:rounded-none hover:border-t-transparent hover:border-r-transparent notplaceholder:rounded-none notplaceholder:mr-6 notplaceholder:border-t-transparent notplaceholder:border-r-transparent notplaceholder:px-2"
+        class="outline-none border-white rounded-r-15 border w-full bg-transparent px-8 hover:px-2 transition-all ease-in-out duration-200 hover:mr-6 hover:rounded-none hover:border-t-transparent hover:border-r-transparent notplaceholder:rounded-none notplaceholder:mr-6 notplaceholder:border-t-transparent notplaceholder:border-r-transparent notplaceholder:px-2"
         placeholder="Search"
         value={value}
         onChange={(e) => setValue((e.target as HTMLInputElement).value)}
@@ -97,7 +97,7 @@ type SearchStatusProps =
  */
 function SearchStatus(props: SearchStatusProps) {
   return (
-    <div class="w-9/12 mx-auto py-5 pb-5 pt-2 rounded-b bg-blue text-white animate__animated animate__slideInDown">
+    <div class="w-9/12 mx-auto py-5 pb-5 pt-2 rounded-b-15 bg-blue text-white animate__animated animate__slideInDown">
       {"query" in props ? (
         // Query in progress
         <div>

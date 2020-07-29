@@ -11,7 +11,7 @@ import AS from "./server/audio";
  */
 export default function NowPlaying({ ws, host }: { ws: WS; host: string }) {
   // State: audio!
-  const [audio, setAudio] = useState(() => new AS(host));
+  const [audio, setAudio] = useState(() => new AS({ws, host}));
   // State: currently playing track!
   const [currentTrack, setCurrentTrack] = useState<TrackMetadata | null>(null);
   // State: Listener count
