@@ -102,13 +102,13 @@ function SearchStatus(props: SearchStatusProps) {
         // Query in progress
         <div>
           <p class="px-2 text-xl">Querying...</p>
-          <p class="px-2">{props.query}</p>
+          <p class="px-2 truncate">{props.query}</p>
         </div>
       ) : props.success ? (
         // Succeeded!
         <div>
           <p class="px-2 text-green text-xl">Track added!</p>
-          <p class="px-2">
+          <p class="px-2 truncate">
             {props.data.track!.artist} - {props.data.track!.title}
           </p>
         </div>
@@ -116,7 +116,7 @@ function SearchStatus(props: SearchStatusProps) {
         // Failed
         <div>
           <p class="px-2 text-red text-xl">Query failed</p>
-          <p class="px-2">{props.reason}</p>
+          <p class="px-2 truncate">{props.reason}</p>
         </div>
       )}
     </div>
