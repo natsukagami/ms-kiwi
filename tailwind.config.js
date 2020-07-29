@@ -29,6 +29,9 @@ module.exports = {
       strokeWidth: {
         "15": "15",
       },
+      screens: {
+        'hovers': {'raw': '(hover: hover)'},
+      },
     },
     maxHeight: {
       '0': '0',

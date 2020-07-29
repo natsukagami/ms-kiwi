@@ -39,7 +39,7 @@ export default function Queue({ ws }: { ws: WS }) {
       {/* List */}
       <div class="flex-grow divide-y divide-white overflow-y-auto overflow-x-scroll scrolling-touch transition-all duration-200">
         {currentQueue.map((track) => (
-          <div class="hover:bg-white hover:text-blue transition-all duration-200 flex flex-row justify-between">
+          <div class="hovers:hover:bg-white hovers:hover:text-blue transition-all duration-200 flex flex-row justify-between">
             {/* Track Info */}
             <div class="mx-4 py-2 flex flex-col justify-between flex-grow">
               <p class="text-lg text-red truncate">{track.title}</p>
@@ -62,7 +62,7 @@ export function RemoveTrack({ ws, track }: { ws: WS; track: TrackMetadata }) {
   return (
     <div class="flex-shrink-0 mx-4 w-12 my-auto" onClick={removeTrack}>
       <svg
-        class="cursor-pointer hover:text-red"
+        class="cursor-pointer hovers:hover:text-red"
         x="0"
         y="0"
         viewBox="-2 -2 30 30"

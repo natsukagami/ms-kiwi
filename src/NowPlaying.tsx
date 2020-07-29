@@ -273,7 +273,7 @@ interface BtnProps {
 function PlayBtn({ onClick, disabled }: BtnProps) {
   const hoverClass = disabled
     ? "cursor-not-allowed"
-    : "hover:text-red cursor-pointer";
+    : "hovers:hover:text-red cursor-pointer";
   return (
     <svg
       class="w-full h-full"
@@ -305,7 +305,7 @@ function PlayBtn({ onClick, disabled }: BtnProps) {
 function PauseBtn({ onClick, disabled }: BtnProps) {
   const hoverClass = disabled
     ? "cursor-not-allowed"
-    : "hover:text-red cursor-pointer";
+    : "hovers:hover:text-red cursor-pointer";
   return (
     <svg
       class="w-full h-full"
@@ -345,7 +345,7 @@ function SkipBtn({
 }) {
   const hoverClass = disabled
     ? "cursor-not-allowed"
-    : "hover:text-red cursor-pointer";
+    : "hovers:hover:text-red cursor-pointer";
   return (
     <svg
       class="w-full h-full"
