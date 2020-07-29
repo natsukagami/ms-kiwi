@@ -58,7 +58,7 @@ export default function NowPlaying({ ws, host }: { ws: WS; host: string }) {
         </div>
         {/* Play/Pause */}
         <div class="flex-shrink-0 w-16">
-          <AudioHandle ws={ws} audio={audio} />
+          <AudioHandle audio={audio} />
         </div>
         {/* Skip */}
         <div class="flex-shrink-0 w-16">
@@ -189,22 +189,11 @@ function LyricsHandle({
 /**
  * The component that controls audio.
  */
-function AudioHandle({ ws, audio }: { ws: WS; audio: AS }) {
+function AudioHandle({ audio }: { audio: AS }) {
   // State: are we paused?
   // can't really use the audio... we don't know if it's changed.
   const [paused, setPaused] = useState(true);
   const [loading, setLoading] = useState(false);
-  // Effect: reload audio on WS track change
-  useEffect(() => {
-    return ws.addMessageHandler((m) => {
-      if (m.op !== Op.SetClientsTrack && m.op !== Op.AllClientsSkip) return;
-      audio.handleMessage(m);
-      setPaused((paused) => {
-        if (!paused) audio.unmute();
-        return paused;
-      });
-    });
-  }, [ws]);
 
   const toggle = () => {
     setLoading(true);

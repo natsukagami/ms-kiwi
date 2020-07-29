@@ -4,7 +4,7 @@ import WS, { Op, Message } from "./ws";
 export default class AS extends Audio {
   host: string;
   currentTrack: TrackMetadata | null;
-  diff: number;
+  delta: number;
   isFallback: boolean;
   wasSkipped: boolean;
   audioStartPos: number;
@@ -13,14 +13,14 @@ export default class AS extends Audio {
     Object.setPrototypeOf(this, AS.prototype);
     ws.addMessageHandler((m) => this.handleMessage(m));
     this.host = host;
-    this.diff = 0;
+    this.delta = 0;
     this.audioStartPos = 0;
     this.wasSkipped = false;
     this.crossOrigin = "use-credentials";
     this.preload = "auto";
     this.autoplay = true;
     this.mute();
-    this.src = this.audioPath();
+    // this.reload();
     this.isFallback = this.audioPath().includes("/fallback");
     this.currentTrack = null;
   }
@@ -30,7 +30,7 @@ export default class AS extends Audio {
     } else return `/audio`;
   }
   reload() {
-    if (eval("!window.safari")) {
+    if (eval("!window.safari") || this.error || !this.src) {
       this.src = this.audioPath();
     }
   }
@@ -42,7 +42,7 @@ export default class AS extends Audio {
     if (!this.src) this.reload();
   }
   currentTrackTime() {
-    return this.currentTime - this.diff + this.audioStartPos;
+    return this.currentTime - this.delta + this.audioStartPos;
   }
   handleMessage(m: Message) {
     if (m.op == Op.AllClientsSkip) {
@@ -57,18 +57,19 @@ export default class AS extends Audio {
     }
     if (m.op != Op.SetClientsTrack) return;
     let delta = m.data.pos! / 48000.0 + 1.584;
-    this.diff = delta;
+    this.delta = delta;
+    let diff = delta - this.currentTime;
     if (
       this.wasSkipped ||
       !this.currentTrack ||
       (this.currentTrack.source == 0 && m.data.track!.source != 0)
     ) {
       this.reload();
-    } else if (Math.abs(this.diff) > 8 && !this.isFallback) {
+    } else if (Math.abs(diff) > 8 && !this.isFallback) {
       if (m.data.track!.source == 0) {
         setTimeout(() => {
           this.reload();
-        }, (this.diff - 3.168) * 1000);
+        }, (diff - 3.168) * 1000);
       } else {
         this.reload();
       }
