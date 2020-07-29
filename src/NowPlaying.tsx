@@ -1,6 +1,6 @@
 import { h } from "preact";
 import WS, { Op, Message } from "./server/ws";
-import { useState, useEffect } from "preact/hooks";
+import { useState, useEffect, useCallback } from "preact/hooks";
 import TrackMetadata, { LyricsLine } from "./server/track";
 import Track from "./TrackInfo";
 import AS from "./server/audio";
@@ -11,7 +11,7 @@ import AS from "./server/audio";
  */
 export default function NowPlaying({ ws, host }: { ws: WS; host: string }) {
   // State: audio!
-  const [audio, setAudio] = useState(() => new AS({ws, host}));
+  const [audio, setAudio] = useState(() => new AS({ ws, host }));
   // State: currently playing track!
   const [currentTrack, setCurrentTrack] = useState<TrackMetadata | null>(null);
   // State: Listener count
@@ -20,7 +20,9 @@ export default function NowPlaying({ ws, host }: { ws: WS; host: string }) {
   useEffect(() => {
     audio.addEventListener(
       "error",
-      () => { audio.reload(); },
+      () => {
+        audio.reload();
+      },
       { once: true }
     );
   }, [audio]);
@@ -63,7 +65,7 @@ export default function NowPlaying({ ws, host }: { ws: WS; host: string }) {
           <Skip ws={ws} />
         </div>
       </div>
-      <LyricsHandle ws={ws} audio={audio} />
+      <LyricsHandle ws={ws} audio={audio} track={currentTrack} />
     </div>
   );
 }
@@ -81,13 +83,12 @@ function ErrorMessageHandle({ ws }: { ws: WS }) {
 
       if (!m.success && m.reason.length > 0) {
         setActiveMsg(m);
-        console.log(m);
         setTimeout(() => {
           setActiveMsg((oldmsg) => {
             //Do not remove another active message
             if (oldmsg === m) return null;
             return oldmsg;
-          })
+          });
         }, 3000);
       }
     });
@@ -99,58 +100,90 @@ function ErrorMessageHandle({ ws }: { ws: WS }) {
     <div class="block mx-auto z-0 bg-blue bg-opacity-75 py-5 pt-5 pt-2 self-center rounded-t text-white animate__animated animate__slideInUp">
       <p class="px-2 text-xl text-red">{activeMsg.reason}</p>
     </div>
-  )
+  );
 }
 /**
  * The lyrics bar
  * @param ws The websocket connection
  * @param audio The audio connection
  */
-function LyricsHandle({ ws, audio }: { ws: WS; audio: AS }) {
+function LyricsHandle({
+  ws,
+  audio,
+  track,
+}: {
+  ws: WS;
+  audio: AS;
+  track: TrackMetadata;
+}) {
   //State: current lyrics line
   const [currentLine, setCurrentLine] = useState(-1);
   //State: current ticker
-  const [currentInterval, setCurrentInterval] = useState<number | undefined>(undefined);
+  const [currentInterval, setCurrentInterval] = useState<number | undefined>(
+    undefined
+  );
   //State: current lyrics
   const [lyrics, setLyrics] = useState<LyricsLine[] | null>(null);
+  useEffect(() => {
+    setLyrics(track.lyrics!.lrc);
+    if (!!track.lyrics?.lrc && track.lyrics!.lrc.length > 0) {
+      let idx = 0;
+      setCurrentLine(idx);
+      setCurrentInterval(
+        setInterval(() => {
+          while (
+            track.lyrics!.lrc[idx].time.total <= audio.currentTrackTime()
+          ) {
+            idx++;
+            setCurrentLine(idx);
+            if (idx >= track.lyrics!.lrc.length) {
+              setCurrentInterval((interval) => {
+                clearInterval(interval);
+                return undefined;
+              });
+              break;
+            }
+          }
+        }, 100)
+      );
+    }
+    return () => {
+      clearInterval(currentInterval);
+    };
+  }, [track]);
   useEffect(() => {
     return ws.addMessageHandler((m) => {
       switch (m.op) {
         case Op.AllClientsSkip:
-          setCurrentInterval((interval) => { clearInterval(interval); return undefined; });
-          break;
-        case Op.SetClientsTrack:
-          console.log(m.data.track!);
-          if (!!m.data.track?.lyrics?.lrc && m.data.track!.lyrics!.lrc.length > 0) {
-            setLyrics(m.data.track!.lyrics!.lrc);
-            let idx = 0;
-            setCurrentLine(idx);
-            setCurrentInterval(setInterval(() => {
-              while (m.data.track!.lyrics!.lrc[idx].time.total <= audio.currentTrackTime()) {
-                idx++;
-                setCurrentLine(idx);
-                if (currentLine >= m.data.track!.lyrics!.lrc.length) {
-                  setCurrentInterval((interval) => { clearInterval(interval); return undefined; });
-                  break;
-                }
-              }
-            }, 100))
-          }
+          setCurrentInterval((interval) => {
+            clearInterval(interval);
+            return undefined;
+          });
           break;
       }
-    })
+    });
   }, [ws]);
 
   //Render!
 
-  if (lyrics === null || currentLine <= 0 || currentLine >= lyrics.length) return null;
+  if (
+    track === null ||
+    lyrics === null ||
+    currentLine <= 0 ||
+    currentLine >= lyrics.length
+  )
+    return null;
 
   return (
     <div class="w-11/12 z-0 bg-blue bg-opacity-75 py-5 pb-5 pt-2 self-center rounded-b text-white animate__animated animate__slideInDown overflow-y-hidden">
-      <p class="px-2 text-xl text-red">{!!lyrics![currentLine - 1].text ? lyrics![currentLine - 1].text : lyrics![currentLine - 1].original}</p>
+      <p class="px-2 text-xl text-red">
+        {!!lyrics![currentLine - 1].text
+          ? lyrics![currentLine - 1].text
+          : lyrics![currentLine - 1].original}
+      </p>
       <p class="px-2">{lyrics![currentLine - 1].translated}</p>
     </div>
-  )
+  );
 }
 
 /**
@@ -185,8 +218,8 @@ function AudioHandle({ ws, audio }: { ws: WS; audio: AS }) {
   return paused ? (
     <PlayBtn onClick={toggle} disabled={loading} />
   ) : (
-      <PauseBtn onClick={toggle} disabled={loading} />
-    );
+    <PauseBtn onClick={toggle} disabled={loading} />
+  );
 }
 
 function Skip({ ws }: { ws: WS }) {
@@ -226,10 +259,10 @@ function Skip({ ws }: { ws: WS }) {
         ? "fill-green"
         : "fill-red"
       : status === null
-        ? "fill-bg"
-        : status === 0
-          ? "fill-bg"
-          : "fill-current";
+      ? "fill-bg"
+      : status === 0
+      ? "fill-bg"
+      : "fill-current";
 
   return (
     <SkipBtn

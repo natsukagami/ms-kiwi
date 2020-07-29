@@ -16,11 +16,11 @@ export default class AS extends Audio {
     this.diff = 0;
     this.audioStartPos = 0;
     this.wasSkipped = false;
-    this.crossOrigin = "anonymous";
+    this.crossOrigin = "use-credentials";
     this.preload = "auto";
     this.autoplay = true;
     this.mute();
-    this.reload();
+    this.src = this.audioPath();
     this.isFallback = this.audioPath().includes("/fallback");
     this.currentTrack = null;
   }
@@ -30,7 +30,9 @@ export default class AS extends Audio {
     } else return `/audio`;
   }
   reload() {
-    this.src = this.audioPath();
+    if (eval("!window.safari")) {
+      this.src = this.audioPath();
+    }
   }
   mute() {
     this.muted = true;
@@ -49,13 +51,13 @@ export default class AS extends Audio {
     }
     if (m.op == Op.ClientAudioStartPos) {
       if (eval("!window.chrome")) {
-        this.audioStartPos = m.data.startPos!;
+        this.audioStartPos = m.data.startPos! / 48000.0;
       }
       return;
     }
     if (m.op != Op.SetClientsTrack) return;
     let delta = m.data.pos! / 48000.0 + 1.584;
-    this.diff = delta - this.currentTime;
+    this.diff = delta;
     if (
       this.wasSkipped ||
       !this.currentTrack ||
