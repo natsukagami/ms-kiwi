@@ -22,6 +22,21 @@ input {
 .hover\:border-b-transparent:hover {
   border-bottom-color: transparent;
 }
+
+@media (hover :hover){
+  .hovers\:hover\:border-l-transparent:hover {
+    border-left-color: transparent;
+  }
+  .hovers\:hover\:border-r-transparent:hover {
+    border-right-color: transparent;
+  }
+  .hovers\:hover\:border-t-transparent:hover {
+    border-top-color: transparent;
+  }
+  .hovers\:hover\:border-b-transparent:hover {
+    border-bottom-color: transparent;
+  }
+}
 .notplaceholder\:rounded-none:not(:placeholder-shown) {
   border-radius: 0;
 }
