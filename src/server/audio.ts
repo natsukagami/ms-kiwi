@@ -30,7 +30,7 @@ export default class AS extends Audio {
     } else return `/audio`;
   }
   reload() {
-    if (eval("!window.safari") || this.error || !this.src) {
+    if (eval("!window.safari") && (this.error || !this.src)) {
       this.src = this.audioPath();
     }
   }
@@ -39,7 +39,9 @@ export default class AS extends Audio {
   }
   unmute() {
     this.muted = false;
-    if (!this.src) this.reload();
+    if (!this.src) {
+      this.src = this.audioPath();
+    }
   }
   currentTrackTime() {
     return this.currentTime - this.delta + this.audioStartPos;
