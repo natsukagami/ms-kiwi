@@ -6,6 +6,7 @@ module.exports = {
       blue: '#1b2b40',
       red: '#d92b3a',
       white: '#c2c6cf',
+      green: '#008C21',
       transparent: 'transparent',
     },
     borderRadius: {
