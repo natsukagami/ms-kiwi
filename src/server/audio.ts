@@ -1,6 +1,9 @@
 import TrackMetadata from "./track";
 import WS, { Op, Message } from "./ws";
 
+/**
+ * AS extends the Audio interface to provide to provide additional type-inference.
+ */
 export default class AS extends Audio {
   host: string;
   currentTrack: TrackMetadata | null;
@@ -8,6 +11,11 @@ export default class AS extends Audio {
   isFallback: boolean;
   wasSkipped: boolean;
   audioStartPos: number;
+  /**
+   * 
+   * @param ws the status websocket connection
+   * @param host the host URL 
+   */
   constructor({ ws, host }: { ws: WS; host: string }) {
     super();
     Object.setPrototypeOf(this, AS.prototype);

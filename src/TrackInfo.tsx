@@ -14,7 +14,7 @@ export default function Track({
 }) {
   return (
     <div class="flex flex-col justify-between text-white overflow-y-hidden">
-      <a class="text-xl text-red truncate" href={ !!track.href ? track.href : "#" }>{track.title}</a>
+      <a class="text-xl text-red truncate" href={!!track.href ? track.href : "#"}>{track.title}</a>
       <p class="truncate">{track.artist}</p>
       {listeners === undefined || <p>Listeners: {listeners}</p>}
     </div>

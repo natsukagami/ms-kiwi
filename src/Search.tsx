@@ -29,7 +29,9 @@ export default function Search({ ws }: { ws: WS }) {
       <div class="z-20 relative">
         <SearchBar query={query} />
       </div>
-      <div class="z-auto relative block">{status && <SearchStatus {...status} />}</div>
+      <div class="z-auto relative block">
+        {status && <SearchStatus {...status} />}
+      </div>
     </div>
   );
 }
@@ -63,7 +65,10 @@ function SearchBar({
   ) as (keyof typeof Selector)[];
 
   return (
-    <form class="bg-transparent text-white flex flex-row mt-1 leading-6" onSubmit={onSubmit}>
+    <form
+      class="bg-transparent text-white flex flex-row mt-1 leading-6"
+      onSubmit={onSubmit}
+    >
       {selectors.map((s, index) => (
         <SelectBtn
           selected={sel === Selector[s]}

@@ -1,6 +1,6 @@
 import { h } from "preact";
 import WS, { Op, Message } from "./server/ws";
-import { useState, useEffect, useCallback } from "preact/hooks";
+import { useState, useEffect } from "preact/hooks";
 import TrackMetadata, { LyricsLine } from "./server/track";
 import Track from "./TrackInfo";
 import AS from "./server/audio";
@@ -207,8 +207,8 @@ function AudioHandle({ audio }: { audio: AS }) {
   return paused ? (
     <PlayBtn onClick={toggle} disabled={loading} />
   ) : (
-    <PauseBtn onClick={toggle} disabled={loading} />
-  );
+      <PauseBtn onClick={toggle} disabled={loading} />
+    );
 }
 
 function Skip({ ws }: { ws: WS }) {
@@ -248,10 +248,10 @@ function Skip({ ws }: { ws: WS }) {
         ? "fill-green"
         : "fill-red"
       : status === null
-      ? "fill-bg"
-      : status === 0
-      ? "fill-bg"
-      : "fill-current";
+        ? "fill-bg"
+        : status === 0
+          ? "fill-bg"
+          : "fill-current";
 
   return (
     <SkipBtn

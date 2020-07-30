@@ -16,7 +16,7 @@ function App({ host }: { host: string }) {
   const [ws, setWs] = useState(newWs());
   /// Effect: reload ws
   useEffect(() => {
-    ws.addEventListener("close", () => setWs(newWs()), {once: true});
+    ws.addEventListener("close", () => setWs(newWs()), { once: true });
   }, [ws]);
   /// Current track information.
   // const [currentTrack, setCurrentTrack] = useState<TrackMetadata | null>(null);

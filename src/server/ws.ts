@@ -40,7 +40,7 @@ export default class WS extends WebSocket {
 
   /** Request a track */
   requestTrack(query: string, selector: Selector) {
-    let nonce = Math.floor(Math.random()*1e9);
+    let nonce = Math.floor(Math.random() * 1e9);
     this.query({ op: Op.ClientRequestTrack, query, selector, nonce });
     return nonce;
   }
@@ -78,7 +78,7 @@ interface Query {
   op: number;
   query?: string;
   selector?: Selector;
-  nonce?: number
+  nonce?: number;
 }
 /**
  * Data trailer from server.
@@ -102,25 +102,23 @@ export enum Selector {
 }
 
 export enum Op {
-  SetClientsTrack     = 1,
-  AllClientsSkip      = 2,
-  ClientRequestTrack  = 3,
-  ClientRequestSkip   = 4,
+  SetClientsTrack = 1,
+  AllClientsSkip = 2,
+  ClientRequestTrack = 3,
+  ClientRequestSkip = 4,
   SetClientsListeners = 5,
-  TrackEnqueued       = 6,
-  ClientRequestQueue  = 7,
-  WebSocketKeepAlive  = 8,
-  ClientRemoveTrack   = 9,
+  TrackEnqueued = 6,
+  ClientRequestQueue = 7,
+  WebSocketKeepAlive = 8,
+  ClientRemoveTrack = 9,
   ClientAudioStartPos = 10,
 }
 
 /** Message represents all kinds of messages sent from the server. */
 export interface Message {
-  op: Op,
-  success: boolean,
-  reason: string,
-  data: MessageData,
-  nonce: number,
+  op: Op;
+  success: boolean;
+  reason: string;
+  data: MessageData;
+  nonce: number;
 }
-
-
