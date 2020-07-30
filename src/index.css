@@ -54,7 +54,7 @@ input {
 }
 
 html {
-  background-image: url("../static/background.png");
+  background-image: url("../static/background.jp2");
   background-size: cover;
   background-position: top;
   overflow: hidden;
