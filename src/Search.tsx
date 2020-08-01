@@ -114,7 +114,7 @@ function SearchStatus(props: SearchStatusProps) {
         <div>
           <p class="px-2 text-green text-xl">Track added!</p>
           <p class="px-2 text-lg">{props.data.track!.title}</p>
-          <p class="px-2 truncate">{props.data.track!.artist}</p>
+          <p class="px-2 truncate">{props.data.track!.artists}</p>
         </div>
       ) : (
         // Failed
