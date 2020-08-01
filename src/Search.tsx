@@ -25,7 +25,7 @@ export default function Search({ ws }: { ws: WS }) {
   };
 
   return (
-    <div class="flex-grow-0 h-32 overflow-x-hidden">
+    <div class="flex-grow-0 h-40 overflow-x-hidden">
       <div class="z-20 relative">
         <SearchBar query={query} />
       </div>
@@ -102,7 +102,7 @@ type SearchStatusProps =
  */
 function SearchStatus(props: SearchStatusProps) {
   return (
-    <div class="w-9/12 mx-auto py-5 pb-5 pt-2 rounded-b-15 bg-blue text-white animate__animated animate__slideInDown">
+    <div class="w-9/12 mx-auto pb-5 pt-2 rounded-b-15 bg-blue text-white animate__animated animate__slideInDown">
       {"query" in props ? (
         // Query in progress
         <div>
