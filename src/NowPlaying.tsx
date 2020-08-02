@@ -49,7 +49,7 @@ export default function NowPlaying({ ws, host }: { ws: WS; host: string }) {
   if (currentTrack === null) return null;
 
   return (
-    <div class="flex flex-col h-64 justify-center overflow-x-visible">
+    <div class="flex flex-col h-64 justify-center overflow-x-visible flex-shrink-0">
       <ErrorMessageHandle ws={ws} />
       <div class="rounded p-4 bg-blue flex flex-row z-10 transition-all ease-in-out duration-1000 animate__animated">
         {/* Track Info */}

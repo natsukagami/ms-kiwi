@@ -25,7 +25,7 @@ export default function Search({ ws }: { ws: WS }) {
   };
 
   return (
-    <div class="flex-grow-0 h-40 overflow-x-hidden">
+    <div class="flex-grow-0 h-40 overflow-x-hidden flex-shrink-0">
       <div class="z-20 relative">
         <SearchBar query={query} />
       </div>
