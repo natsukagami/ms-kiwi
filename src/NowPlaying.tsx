@@ -53,7 +53,7 @@ export default function NowPlaying({ ws, host }: { ws: WS; host: string }) {
       <ErrorMessageHandle ws={ws} />
       <div class="rounded p-4 bg-blue flex flex-row z-10 transition-all ease-in-out duration-1000 animate__animated">
         {/* Track Info */}
-        <div class="flex-grow">
+        <div class="flex-grow overflow-x-scroll scrolling-touch">
           <Track track={currentTrack} listeners={listeners} />
         </div>
         {/* Play/Pause */}
