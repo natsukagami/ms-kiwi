@@ -12,9 +12,9 @@ export default class AS extends Audio {
   wasSkipped: boolean;
   audioStartPos: number;
   /**
-   * 
+   *
    * @param ws the status websocket connection
-   * @param host the host URL 
+   * @param host the host URL
    */
   constructor({ ws, host }: { ws: WS; host: string }) {
     super();
@@ -28,7 +28,6 @@ export default class AS extends Audio {
     this.preload = "auto";
     this.autoplay = true;
     this.mute();
-    // this.reload();
     this.isFallback = this.audioPath().includes("/fallback");
     this.currentTrack = null;
   }
@@ -38,7 +37,7 @@ export default class AS extends Audio {
     } else return `/audio`;
   }
   reload() {
-    if (eval("!window.safari") && (this.error || !this.src)) {
+    if (!this.isFallback && (this.error || !this.src)) {
       this.src = this.audioPath();
     }
   }
@@ -60,7 +59,7 @@ export default class AS extends Audio {
       return;
     }
     if (m.op == Op.ClientAudioStartPos) {
-      if (eval("!window.chrome")) {
+      if (eval("!window.chrome") || navigator.userAgent.match("CriOS")) {
         this.audioStartPos = m.data.startPos! / 48000.0;
       }
       return;
