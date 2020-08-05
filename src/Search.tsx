@@ -48,7 +48,10 @@ function SearchBar({
   /// The current query value.
   const [value, setValue] = useState("");
   /// The current selector.
-  const [sel, setSel] = useState<Selector>(Selector.DZ);
+  const [sel, setSel] = useState<Selector>(() => {
+    let _ = localStorage.getItem("src-selector");
+    return _ && +_ in Selector && +_ || 1;
+  });
 
   /// On-submit handler
   const onSubmit = (e: Event) => {
@@ -72,7 +75,10 @@ function SearchBar({
       {selectors.map((s, index) => (
         <SelectBtn
           selected={sel === Selector[s]}
-          set={() => setSel(Selector[s])}
+          set={() => {
+            localStorage.setItem("src-selector", Selector[s].toString())
+            setSel(Selector[s])
+          }}
           text={s}
           class={index === 0 ? "rounded-l-15" : ""}
         />
@@ -89,12 +95,12 @@ function SearchBar({
 
 type SearchStatusProps =
   | {
-      success: boolean;
-      reason: string;
-      data: {
-        track?: TrackMetadata;
-      };
-    }
+    success: boolean;
+    reason: string;
+    data: {
+      track?: TrackMetadata;
+    };
+  }
   | { query: string };
 
 /**
@@ -117,12 +123,12 @@ function SearchStatus(props: SearchStatusProps) {
           <p class="px-2 truncate">{props.data.track!.artists}</p>
         </div>
       ) : (
-        // Failed
-        <div>
-          <p class="px-2 text-red text-xl">Query failed</p>
-          <p class="px-2 truncate">{props.reason}</p>
-        </div>
-      )}
+            // Failed
+            <div>
+              <p class="px-2 text-red text-xl">Query failed</p>
+              <p class="px-2 truncate">{props.reason}</p>
+            </div>
+          )}
     </div>
   );
 }
