@@ -37,11 +37,11 @@ export default function Queue({ ws }: { ws: WS }) {
     <div class="overflow-x-auto rounded-t pt-4 flex flex-col flex-grow bg-blue bg-opacity-75 text-white animate__animated animate__slideInUp">
       <p class="mx-4 mb-2 text-2xl">In Queue</p>
       {/* List */}
-      <div class="flex-grow divide-y divide-white overflow-y-auto overflow-x-scroll scrolling-touch transition-all duration-200">
+      <div class="flex-grow divide-y divide-white overflow-y-auto scrolling-touch transition-all duration-200">
         {currentQueue.map((track) => (
-          <div class="hovers:hover:bg-white hovers:hover:text-blue transition-all duration-200 flex flex-row justify-between">
+          <div class="hovers:hover:bg-white hovers:hover:text-blue transition-all duration-200 flex flex-row justify-between overflow-x-auto">
             {/* Track Info */}
-            <div class="mx-4 py-2 flex flex-col justify-between flex-grow">
+            <div class="mx-4 py-2 flex flex-col justify-between flex-grow overflow-x-hidden">
               <p class="text-lg text-red truncate">{track.title}</p>
               <p class="truncate">{track.artists}</p>
             </div>
