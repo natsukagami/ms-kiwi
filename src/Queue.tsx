@@ -12,7 +12,7 @@ export default function Queue({ ws }: { ws: WS }) {
   const [currentQueue, setCurrentQueue] = useState<TrackMetadata[]>([]);
   // Effect: trace the current queue.
   useEffect(() => {
-    const fn = (m: Message) => {
+    const remove = ws.addMessageHandler((m: Message) => {
       switch (m.op) {
         case Op.TrackEnqueued:
           setCurrentQueue((oldQueue) => oldQueue.concat(m.data.track!));
@@ -26,8 +26,9 @@ export default function Queue({ ws }: { ws: WS }) {
           setCurrentQueue(m.data.queue!);
           return;
       }
-    };
-    return ws.addMessageHandler(fn);
+    });
+    ws.readyState === ws.OPEN && ws.getQueue(); // Don't rely on the websocket to send us. You might miss it
+    return remove;
   }, [ws]);
 
   /// Render!
