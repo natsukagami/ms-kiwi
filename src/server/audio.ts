@@ -37,7 +37,7 @@ export default class AS extends Audio {
     } else return `/audio`;
   }
   reload() {
-    if (!this.isFallback && (this.error || !this.src)) {
+    if (!this.isFallback) {
       this.src = this.audioPath();
     }
   }
