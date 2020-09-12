@@ -13,9 +13,9 @@ export default function Track({
   listeners?: number;
 }) {
   return (
-    <div class="flex flex-col justify-between text-white overflow-y-hidden flex-grow">
-      <a class="text-xl text-accent whitespace-no-wrap" target="_blank" rel="noopener noreferrer" href={!!track.href ? track.href : "#"}>{track.title}</a>
-      <p class="whitespace-no-wrap">{track.artists}</p>
+    <div class="flex flex-col justify-between text-white flex-grow">
+      <a class="text-xl text-accent" target="_blank" rel="noopener noreferrer" href={!!track.href ? track.href : "#"}>{track.title}</a>
+      <p class="">{track.artists}</p>
       {listeners === undefined || <p>Listeners: {listeners}</p>}
     </div>
   );
