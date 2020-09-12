@@ -108,7 +108,7 @@ type SearchStatusProps =
  */
 function SearchStatus(props: SearchStatusProps) {
   return (
-    <div class="w-9/12 mx-auto pb-5 pt-2 rounded-b-15 bg-blue text-white animate__animated animate__slideInDown">
+    <div class="w-9/12 mx-auto pb-5 pt-2 rounded-b-15 bg-blue bg-opacity-50 text-white animate__animated animate__slideInDown">
       {"query" in props ? (
         // Query in progress
         <div>
@@ -119,7 +119,7 @@ function SearchStatus(props: SearchStatusProps) {
         // Succeeded!
         <div>
           <p class="px-2 text-green text-xl">Track added!</p>
-          <p class="px-2 text-lg">{props.data.track!.title}</p>
+          <p class="px-2 text-lg text-secondary">{props.data.track!.title}</p>
           <p class="px-2 truncate">{props.data.track!.artists}</p>
         </div>
       ) : (
@@ -149,7 +149,7 @@ function SelectBtn({
   set: () => void;
   text: string;
 } & h.JSX.HTMLAttributes<HTMLDivElement>) {
-  const selectedClass = selected ? "bg-white text-blue" : "";
+  const selectedClass = selected ? "bg-white text-teritary" : "";
   return (
     <div
       {...rest}

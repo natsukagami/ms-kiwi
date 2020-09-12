@@ -176,7 +176,7 @@ function LyricsHandle({
 
   return (
     <div class="w-11/12 z-0 bg-blue bg-opacity-75 py-5 pb-5 pt-2 self-center rounded-b text-white animate__animated animate__slideInDown overflow-y-hidden">
-      <p class="px-2 text-xl text-red">
+      <p class="px-2 text-xl text-accent">
         {!!lyrics![currentLine - 1].text
           ? lyrics![currentLine - 1].text
           : lyrics![currentLine - 1].original}
@@ -273,7 +273,7 @@ interface BtnProps {
 function PlayBtn({ onClick, disabled }: BtnProps) {
   const hoverClass = disabled
     ? "cursor-not-allowed"
-    : "hovers:hover:text-red cursor-pointer";
+    : "hovers:hover:text-accent cursor-pointer";
   return (
     <svg
       class="w-full h-full"
@@ -305,7 +305,7 @@ function PlayBtn({ onClick, disabled }: BtnProps) {
 function PauseBtn({ onClick, disabled }: BtnProps) {
   const hoverClass = disabled
     ? "cursor-not-allowed"
-    : "hovers:hover:text-red cursor-pointer";
+    : "hovers:hover:text-accent cursor-pointer";
   return (
     <svg
       class="w-full h-full"
@@ -345,7 +345,7 @@ function SkipBtn({
 }) {
   const hoverClass = disabled
     ? "cursor-not-allowed"
-    : "hovers:hover:text-red cursor-pointer";
+    : "hovers:hover:text-accent cursor-pointer";
   return (
     <svg
       class="w-full h-full"

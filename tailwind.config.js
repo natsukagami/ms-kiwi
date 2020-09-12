@@ -3,11 +3,15 @@ module.exports = {
   purge: ["./src/**/*.ts", "./src/**/*.tsx"],
   theme: {
     colors: {
-      blue: '#1b2b40',
+      blue: '#121526',
       red: '#d92b3a',
-      white: '#c2c6cf',
+      white: '#ffffff',
       green: '#008C21',
       transparent: 'transparent',
+      accent: '#F27979',
+      secondary: '#BF457E',
+      teritary: '#6A5A8C',
+      darkyellow : '#734924'
     },
     borderRadius: {
       'none': "0px",
@@ -21,6 +25,7 @@ module.exports = {
       white: theme("colors.white"),
       green: theme("colors.green"),
       transparent: theme("colors.transparent"),
+      teritary: theme("colors.teritary")
     }),
     extend: {
       spacing: {

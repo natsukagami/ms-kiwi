@@ -43,7 +43,7 @@ export default function Queue({ ws }: { ws: WS }) {
           <div class="hovers:hover:bg-white hovers:hover:text-blue transition-all duration-200 flex flex-row justify-between overflow-x-auto">
             {/* Track Info */}
             <div class="mx-4 py-2 flex flex-col justify-between flex-grow overflow-x-hidden">
-              <p class="text-lg text-red truncate">{track.title}</p>
+              <p class="text-lg text-secondary truncate">{track.title}</p>
               <p class="truncate">{track.artists}</p>
             </div>
             {/* Remove button */}

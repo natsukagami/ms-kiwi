@@ -22,7 +22,8 @@
   "scripts": {
     "build": "parcel build index.html",
     "dev": "parcel serve index.html",
-    "fmt": "prettier index.html src/**/*"
+    "fmt": "prettier index.html src/**/*",
+    "clean": "rm -rf dist/ .cache/"
   },
   "browserslist": [
     "> 5%"
