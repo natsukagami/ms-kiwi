@@ -4,6 +4,7 @@ import { useState, useEffect } from "preact/hooks";
 import TrackMetadata, { LyricsLine } from "./server/track";
 import Track from "./TrackInfo";
 import AS from "./server/audio";
+import Queue, { QueueBtn } from "./Queue";
 
 /**
  * The now playing bar.
@@ -16,6 +17,8 @@ export default function NowPlaying({ ws, host }: { ws: WS; host: string }) {
   const [currentTrack, setCurrentTrack] = useState<TrackMetadata | null>(null);
   // State: Listener count
   const [listeners, setListeners] = useState(0);
+  // State: queue visible?
+  const [queueVisible, setQueueVisible] = useState(false);
   // Effect: reload on unload
   useEffect(() => {
     audio.addEventListener(
@@ -49,24 +52,33 @@ export default function NowPlaying({ ws, host }: { ws: WS; host: string }) {
   if (currentTrack === null) return null;
 
   return (
-    <div class="flex flex-col h-64 justify-center overflow-x-visible flex-shrink-0">
+    <div class="flex flex-col justify-center overflow-x-visible flex-shrink-0">
       <ErrorMessageHandle ws={ws} />
-      <div class="rounded p-4 bg-blue flex flex-row z-10 transition-all ease-in-out duration-1000 animate__animated">
+      <div class="rounded h-40 flex flex-row">
+        <img src={currentTrack.cover} class="flex-grow object-cover"></img>
+      </div>
+      <div class="rounded p-4 bg-blue flex flex-col z-10 transition-all ease-in-out duration-1000 animate__animated">
         {/* Track Info */}
         <div class="flex-grow break-words">
-          <Track track={currentTrack} listeners={listeners} />
+          {queueVisible ? (<Queue ws={ws} />) : (<Track track={currentTrack} listeners={listeners} />)}
+        </div>
+      </div>
+      <div class="flex flex-row p-4 h-24">
+        {/* Queue */}
+        <div class="flex-grow">
+          <QueueBtn onClick={() => { setQueueVisible((x) => !x); }} disabled={false}></QueueBtn>
         </div>
         {/* Play/Pause */}
-        <div class="flex-shrink-0 w-16">
+        <div class="flex-grow">
           <AudioHandle audio={audio} />
         </div>
         {/* Skip */}
-        <div class="flex-shrink-0 w-16">
+        <div class="flex-grow">
           <Skip ws={ws} />
         </div>
       </div>
       <LyricsHandle ws={ws} audio={audio} track={currentTrack} />
-    </div>
+    </div >
   );
 }
 /**
@@ -290,6 +302,7 @@ function PlayBtn({ onClick, disabled }: BtnProps) {
         class={`stroke-current stroke-15 fill-bg text-white stroke-2 ${hoverClass}`}
         transform="translate(75,65) scale(0.5)"
       >
+        <rect x="0" y="0" width="250.488" height="250.488" stroke="transparent" stroke-width="1" fill="transparent" fill-opacity="0.5" />
         <path
           style="fill-rule:evenodd;clip-rule:evenodd;"
           d="M203.791,99.628L49.307,2.294c-4.567-2.719-10.238-2.266-14.521-2.266   c-17.132,0-17.056,13.227-17.056,16.578v198.94c0,2.833-0.075,16.579,17.056,16.579c4.283,0,9.955,0.451,14.521-2.267   l154.483-97.333c12.68-7.545,10.489-16.449,10.489-16.449S216.471,107.172,203.791,99.628z"
@@ -322,6 +335,7 @@ function PauseBtn({ onClick, disabled }: BtnProps) {
         class={`stroke-current stroke-15 fill-bg text-white stroke-2 ${hoverClass}`}
         transform="translate(75,65) scale(0.5)"
       >
+        <rect x="0" y="0" width="250.488" height="250.488" stroke="transparent" stroke-width="1" fill="transparent" fill-opacity="0.5" />
         <path
           style="fill-rule:evenodd;clip-rule:evenodd;"
           d="M80.543,0H35.797c-9.885,0-17.898,8.014-17.898,17.898v196.883   c0,9.885,8.013,17.898,17.898,17.898h44.746c9.885,0,17.898-8.013,17.898-17.898V17.898C98.44,8.014,90.427,0,80.543,0z M196.882,0   h-44.746c-9.886,0-17.899,8.014-17.899,17.898v196.883c0,9.885,8.013,17.898,17.899,17.898h44.746   c9.885,0,17.898-8.013,17.898-17.898V17.898C214.781,8.014,206.767,0,196.882,0z"

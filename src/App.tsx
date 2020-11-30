@@ -3,7 +3,6 @@ import { useState, useEffect } from "preact/hooks";
 import WS from "./server/ws";
 import Search from "./Search";
 import NowPlaying from "./NowPlaying";
-import Queue from "./Queue";
 
 /**
  * Main app.
@@ -33,8 +32,6 @@ function App({ host }: { host: string }) {
         <Search ws={ws} />
         {/* Currently playing */}
         <NowPlaying ws={ws} host={host} />
-        {/* Queue */}
-        <Queue ws={ws} />
       </div>
     </div>
   );

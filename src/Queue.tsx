@@ -33,10 +33,10 @@ export default function Queue({ ws }: { ws: WS }) {
 
   /// Render!
   // Don't display anything if there's no tracks in queue.
-  if (currentQueue === null || currentQueue.length <= 0) return null;
+  //if (currentQueue === null || currentQueue.length <= 0) return null;
   return (
-    <div class="overflow-x-auto rounded-t pt-4 flex flex-col flex-grow bg-blue bg-opacity-75 text-white animate__animated animate__slideInUp">
-      <p class="mx-4 mb-2 text-2xl">In Queue</p>
+    <div class="overflow-x-auto flex flex-col flex-grow text-white animate__animated">
+      <p class="mx-4 mb-2 text-2xl">{currentQueue.length > 0 ? "In Queue" : "Nothing is in queue"}</p>
       {/* List */}
       <div class="flex-grow divide-y divide-white overflow-y-auto scrolling-touch transition-all duration-200">
         {currentQueue.map((track) => (
@@ -81,5 +81,46 @@ export function RemoveTrack({ ws, track }: { ws: WS; track: TrackMetadata }) {
         </g>
       </svg>
     </div>
+  );
+}
+/**
+ * Queue button...
+ */
+export function QueueBtn({
+  onClick,
+  disabled,
+  className = "",
+}: {
+  onClick: () => void;
+  disabled: boolean;
+  className?: string;
+}) {
+  const hoverClass = disabled
+    ? "cursor-not-allowed"
+    : "hovers:hover:text-accent cursor-pointer";
+  return (
+    <svg
+      class="w-full h-full"
+      xmlns="http://www.w3.org/2000/svg"
+      xmlnsXlink="http://www.w3.org/1999/xlink"
+      version="1.1"
+      x="0px"
+      y="0px"
+      viewBox="0 0 250.488 250.488"
+      xmlSpace="preserve"
+      onClick={disabled ? undefined : onClick}
+    >
+      <g
+        class={`stroke-current stroke-15 fill-bg text-white stroke-2 duration-500 transition-all ${hoverClass} ${className}`}
+        transform="translate(75,65) scale(.5)"
+        style="fill-rule:evenodd;clip-rule:evenodd;"
+      >
+        <rect x="0" y="0" width="250.488" height="250.488" stroke="transparent" stroke-width="1" fill="transparent" fill-opacity="0.5" />
+        <path class="st0" d="M17.9,201.4v22.4c0,4.9,6.8,8.9,15.1,8.9h166.6c8.4,0,15.1-4,15.1-8.9v-22.4c0-4.9-6.8-8.9-15.1-8.9H33
+	C24.7,192.4,17.9,196.4,17.9,201.4z M13.6,9.1v22.4c0,4.9,6.8,8.9,15.1,8.9h166.6c8.4,0,15.1-4,15.1-8.9V9.1c0-4.9-6.8-8.9-15.1-8.9
+	H28.7C20.4,0.1,13.6,4.1,13.6,9.1z M14.6,106.4v22.4c0,4.9,6.8,8.9,15.1,8.9h166.6c8.4,0,15.1-4,15.1-8.9v-22.4
+	c0-4.9-6.8-8.9-15.1-8.9H29.7C21.4,97.5,14.6,101.5,14.6,106.4z"/>
+      </g>
+    </svg>
   );
 }
