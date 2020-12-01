@@ -19,6 +19,8 @@ export default function NowPlaying({ ws, host }: { ws: WS; host: string }) {
   const [listeners, setListeners] = useState(0);
   // State: queue visible?
   const [queueVisible, setQueueVisible] = useState(false);
+  //State: active message
+  const [activeMsg, setActiveMsg] = useState<Message | null>(null);
   // Effect: reload on unload
   useEffect(() => {
     audio.addEventListener(
@@ -41,7 +43,21 @@ export default function NowPlaying({ ws, host }: { ws: WS; host: string }) {
         case Op.SetClientsListeners:
           setListeners(m.data!.listeners!);
           return;
+        case Op.ClientRequestTrack:
+          return;
+        default:
+          if (!m.success && m.reason.length > 0) {
+            setActiveMsg(m);
+            setTimeout(() => {
+              setActiveMsg((oldmsg) => {
+                //Do not remove another active message
+                if (oldmsg === m) return null;
+                return oldmsg;
+              });
+            }, 3000);
+          }
       }
+
     });
     ws.readyState === ws.OPEN && ws.getPlaying(); // Don't rely on the websocket connection to send you stuff first.
     return remove;
@@ -52,18 +68,20 @@ export default function NowPlaying({ ws, host }: { ws: WS; host: string }) {
   if (currentTrack === null) return null;
 
   return (
-    <div class="flex flex-col justify-center overflow-x-visible flex-shrink-0">
-      <ErrorMessageHandle ws={ws} />
-      <div class="rounded h-40 flex flex-row">
-        <img src={currentTrack.cover} class="flex-grow object-cover"></img>
-      </div>
-      <div class="rounded p-4 bg-blue flex flex-col z-10 transition-all ease-in-out duration-1000 animate__animated">
+    <div class="flex flex-col overflow-x-visible flex-grow overflow-y-auto">
+      <LyricsHandle ws={ws} audio={audio} track={currentTrack} />
+      {/* <div class="rounded h-44 flex flex-row">
+        <img src={currentTrack.cover} class="flex-grow object-contain"></img>
+      </div> */}
+      <div class="flex-shrink overflow-y-hidden rounded p-4 bg-blue flex flex-col z-10 transition-all ease-in-out duration-1000 animate__animated">
         {/* Track Info */}
-        <div class="flex-grow break-words">
-          {queueVisible ? (<Queue ws={ws} />) : (<Track track={currentTrack} listeners={listeners} />)}
-        </div>
+        {activeMsg === null ? queueVisible ? (<Queue ws={ws} />) : (
+          <div class="flex-grow break-words"><Track track={currentTrack} listeners={listeners} /></div>)
+          : (<div class="flex flex-col justify-between text-white flex-grow">
+            <a class="text-xl text-accent">{activeMsg.reason}</a>
+          </div>)}
       </div>
-      <div class="flex flex-row p-4 h-24">
+      <div class="flex flex-none flex-row p-4 h-24">
         {/* Queue */}
         <div class="flex-grow">
           <QueueBtn onClick={() => { setQueueVisible((x) => !x); }} disabled={false}></QueueBtn>
@@ -77,40 +95,6 @@ export default function NowPlaying({ ws, host }: { ws: WS; host: string }) {
           <Skip ws={ws} />
         </div>
       </div>
-      <LyricsHandle ws={ws} audio={audio} track={currentTrack} />
-    </div >
-  );
-}
-/**
- * The fallback error message handler
- * @param ws The websocket connection
- */
-function ErrorMessageHandle({ ws }: { ws: WS }) {
-  //State: active message
-  const [activeMsg, setActiveMsg] = useState<Message | null>(null);
-  useEffect(() => {
-    return ws.addMessageHandler((m) => {
-      //Because this is already handled from Search
-      if (m.op == Op.ClientRequestTrack) return;
-
-      if (!m.success && m.reason.length > 0) {
-        setActiveMsg(m);
-        setTimeout(() => {
-          setActiveMsg((oldmsg) => {
-            //Do not remove another active message
-            if (oldmsg === m) return null;
-            return oldmsg;
-          });
-        }, 3000);
-      }
-    });
-  }, [ws]);
-
-  //Render!
-  if (activeMsg === null) return null;
-  return (
-    <div class="block mx-auto z-0 bg-blue bg-opacity-75 py-5 pt-5 pt-2 self-center rounded-t text-white animate__animated animate__slideInUp">
-      <p class="px-2 text-xl text-red">{activeMsg.reason}</p>
     </div>
   );
 }
@@ -180,20 +164,18 @@ function LyricsHandle({
 
   if (
     track === null ||
-    lyrics === null ||
-    currentLine <= 0 ||
-    currentLine >= lyrics.length
+    lyrics === null
   )
     return null;
 
   return (
-    <div class="w-11/12 z-0 bg-blue bg-opacity-75 py-5 pb-5 pt-2 self-center rounded-b text-white animate__animated animate__slideInDown overflow-y-hidden">
+    <div class="w-11/12 z-0 bg-blue bg-opacity-75 py-5 pb-5 pt-2 self-center rounded-t text-white animate__animated animate__slideInUp overflow-y-hidden">
       <p class="px-2 text-xl text-accent">
-        {!!lyrics![currentLine - 1].text
+        {currentLine - 1 >= 0 && currentLine - 1 < lyrics.length ? !!lyrics![currentLine - 1].text
           ? lyrics![currentLine - 1].text
-          : lyrics![currentLine - 1].original}
+          : lyrics![currentLine - 1].original : ""}
       </p>
-      <p class="px-2">{lyrics![currentLine - 1].translated}</p>
+      <p class="px-2">{currentLine - 1 >= 0 && currentLine - 1 < lyrics.length ? lyrics![currentLine - 1].translated : ""}</p>
     </div>
   );
 }

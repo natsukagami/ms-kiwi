@@ -33,12 +33,12 @@ export default function Queue({ ws }: { ws: WS }) {
 
   /// Render!
   // Don't display anything if there's no tracks in queue.
-  //if (currentQueue === null || currentQueue.length <= 0) return null;
+  // if (currentQueue === null || currentQueue.length <= 0) { return null; }
   return (
-    <div class="overflow-x-auto flex flex-col flex-grow text-white animate__animated">
+    <div class="overflow-x-auto flex flex-col flex-grow text-white animate__animated overflow-y-auto">
       <p class="mx-4 mb-2 text-2xl">{currentQueue.length > 0 ? "In Queue" : "Nothing is in queue"}</p>
       {/* List */}
-      <div class="flex-grow divide-y divide-white overflow-y-auto scrolling-touch transition-all duration-200">
+      <div class="overflow-auto divide-y divide-white overflow-y-auto scrolling-touch transition-all duration-200">
         {currentQueue.map((track) => (
           <div class="hovers:hover:bg-white hovers:hover:text-blue transition-all duration-200 flex flex-row justify-between overflow-x-auto">
             {/* Track Info */}
