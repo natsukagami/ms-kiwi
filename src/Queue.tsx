@@ -100,26 +100,34 @@ export function QueueBtn({
     : "hovers:hover:text-accent cursor-pointer";
   return (
     <svg
-      class="w-full h-full"
+      class="w-full h-full overflow-visible"
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
       version="1.1"
       x="0px"
       y="0px"
-      viewBox="0 0 250.488 250.488"
+      viewBox="0 0 256 256"
       xmlSpace="preserve"
       onClick={disabled ? undefined : onClick}
     >
       <g
         class={`stroke-current stroke-15 fill-bg text-white stroke-2 duration-500 transition-all ${hoverClass} ${className}`}
-        transform="translate(75,65) scale(.5)"
+        transform="scale(.5)"
         style="fill-rule:evenodd;clip-rule:evenodd;"
       >
-        <rect x="0" y="0" width="250.488" height="250.488" stroke="transparent" stroke-width="1" fill="transparent" fill-opacity="0.5" />
-        <path class="st0" d="M17.9,201.4v22.4c0,4.9,6.8,8.9,15.1,8.9h166.6c8.4,0,15.1-4,15.1-8.9v-22.4c0-4.9-6.8-8.9-15.1-8.9H33
-	C24.7,192.4,17.9,196.4,17.9,201.4z M13.6,9.1v22.4c0,4.9,6.8,8.9,15.1,8.9h166.6c8.4,0,15.1-4,15.1-8.9V9.1c0-4.9-6.8-8.9-15.1-8.9
-	H28.7C20.4,0.1,13.6,4.1,13.6,9.1z M14.6,106.4v22.4c0,4.9,6.8,8.9,15.1,8.9h166.6c8.4,0,15.1-4,15.1-8.9v-22.4
-	c0-4.9-6.8-8.9-15.1-8.9H29.7C21.4,97.5,14.6,101.5,14.6,106.4z"/>
+        <rect x="0" y="0" width="256" height="256" stroke="transparent" stroke-width="1" fill="transparent" fill-opacity="0.5" />
+        <g>
+          <path d="M0,30c0,16.5,9,30,20,30h216c11,0,20-13.5,20-30s-9-30-20-30H20C9,0,0,13.5,0,30C0,30,0,13.5,0,30z" />
+          <path d="M0,30c0,16.5,9,30,20,30h216c11,0,20-13.5,20-30s-9-30-20-30H20C9,0,0,13.5,0,30C0,30,0,13.5,0,30z" />
+        </g>
+        <g>
+          <path d="M0,226c0,16.5,9,30,20,30h216c11,0,20-13.5,20-30s-9-30-20-30H20C9,196,0,209.5,0,226C0,226,0,209.5,0,226z" />
+          <path d="M0,226c0,16.5,9,30,20,30h216c11,0,20-13.5,20-30s-9-30-20-30H20C9,196,0,209.5,0,226C0,226,0,209.5,0,226z" />
+        </g>
+        <g>
+          <path d="M0,128c0,16.5,9,30,20,30h216c11,0,20-13.5,20-30s-9-30-20-30H20C9,98,0,111.5,0,128C0,128,0,111.5,0,128z" />
+          <path d="M0,128c0,16.5,9,30,20,30h216c11,0,20-13.5,20-30s-9-30-20-30H20C9,98,0,111.5,0,128C0,128,0,111.5,0,128z" />
+        </g>
       </g>
     </svg>
   );
