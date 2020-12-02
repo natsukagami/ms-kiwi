@@ -81,17 +81,17 @@ export default function NowPlaying({ ws, host }: { ws: WS; host: string }) {
             <a class="text-xl text-accent">{activeMsg.reason}</a>
           </div>)}
       </div>
-      <div class="flex flex-none flex-row p-4 h-24">
+      <div class="flex flex-none flex-row p-4 h-16">
         {/* Queue */}
-        <div class="flex-grow">
+        <div class="flex-grow w-1/3">
           <QueueBtn onClick={() => { setQueueVisible((x) => !x); }} disabled={false}></QueueBtn>
         </div>
         {/* Play/Pause */}
-        <div class="flex-grow">
+        <div class="flex-grow w-1/3">
           <AudioHandle audio={audio} />
         </div>
         {/* Skip */}
-        <div class="flex-grow">
+        <div class="flex-grow w-1/3">
           <Skip ws={ws} />
         </div>
       </div>
@@ -282,7 +282,6 @@ function PlayBtn({ onClick, disabled }: BtnProps) {
     >
       <g
         class={`stroke-current stroke-15 fill-bg text-white stroke-2 ${hoverClass}`}
-        transform="scale(0.5)"
       >
         <rect x="0" y="0" width="256" height="256" stroke="transparent" stroke-width="1" fill="transparent" fill-opacity="0.5" />
         <path d="M216.2,114.9L39.8,13.1c-10.1-5.8-22.6,1.5-22.6,13.1v203.7c0,11.6,12.6,18.9,22.6,13.1l176.4-101.8
@@ -313,7 +312,6 @@ function PauseBtn({ onClick, disabled }: BtnProps) {
     >
       <g
         class={`stroke-current stroke-15 fill-bg text-white stroke-2 ${hoverClass}`}
-        transform="scale(0.5)"
       >
         <rect x="0" y="0" width="256" height="256" stroke="transparent" stroke-width="1" fill="transparent" fill-opacity="0.5" />
         <g>
@@ -356,7 +354,6 @@ function SkipBtn({
     >
       <g
         class={`stroke-current stroke-15 fill-bg text-white stroke-2 duration-500 transition-all ${hoverClass} ${className}`}
-        transform="scale(0.5)"
       >
         <rect x="0" y="0" width="256" height="256" stroke="transparent" stroke-width="1" fill="transparent" fill-opacity="0.5" />
         <path d="M247.7,109.9L143.5,2.5c-3.6-3-8-2.5-11.3-2.5c-13.3,0-13.3,14.6-13.3,18.3v81.3L24.6,2.5C21-0.5,16.6,0,13.3,0
