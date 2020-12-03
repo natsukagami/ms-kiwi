@@ -164,7 +164,8 @@ function LyricsHandle({
 
   if (
     track === null ||
-    lyrics === null
+    lyrics === null ||
+    currentLine >= lyrics.length
   )
     return null;
 
