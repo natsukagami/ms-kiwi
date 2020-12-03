@@ -12,10 +12,11 @@
     "prettier": "^2.0.5"
   },
   "dependencies": {
-    "autoprefixer": "^9.8.0",
+    "autoprefixer": "^9",
+    "postcss": "^7",
     "postcss-modules": "^2.0.0",
     "preact": "^10.4.4",
-    "tailwindcss": "^1.4.6",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat",
     "tailwindcss-animatecss": "^1.0.7",
     "typescript": "^3.9.3"
   },
