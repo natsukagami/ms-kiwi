@@ -170,7 +170,7 @@ function LyricsHandle({
     return null;
 
   return (
-    <div class="flex-none w-11/12 z-0 bg-blue bg-opacity-75 py-5 pb-5 pt-2 self-center rounded-t text-white animate__animated animate__slideInUp overflow-y-hidden">
+    <div class="flex-none w-11/12 z-0 bg-blue bg-opacity-75 pb-3 pt-2 self-center rounded-t text-white animate__animated animate__slideInUp overflow-y-hidden">
       <p class="px-2 text-lg text-accent">
         {currentLine - 1 >= 0 && currentLine - 1 < lyrics.length ? !!lyrics![currentLine - 1].text
           ? lyrics![currentLine - 1].text
