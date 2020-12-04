@@ -4,6 +4,7 @@ import TrackMetadata from "./track";
  * WS extends the WebSocket interface to provide to provide additional type-inference.
  */
 export default class WS extends WebSocket {
+  pingIntervalID: number | undefined;
   /**
    *
    * @param host The host URL, of the form `ws://...` or `wss://...`
@@ -11,6 +12,15 @@ export default class WS extends WebSocket {
   constructor(host: string) {
     super(host);
     Object.setPrototypeOf(this, WS.prototype);
+    super.addEventListener("open", () => {
+      this.pingIntervalID = setInterval(() => {
+        this.ping();
+      }, 45000);
+    });
+    super.addEventListener("close", () => {
+      clearInterval(this.pingIntervalID);
+      this.pingIntervalID = undefined;
+    });
   }
 
   /**
