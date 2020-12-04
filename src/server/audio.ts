@@ -37,9 +37,7 @@ export default class AS extends Audio {
     } else return `/audio`;
   }
   reload() {
-    if (!this.isFallback) {
-      this.src = this.audioPath();
-    }
+    this.src = this.audioPath();
   }
   mute() {
     this.muted = true;
@@ -70,11 +68,12 @@ export default class AS extends Audio {
     let diff = delta - this.currentTime;
     if (
       this.wasSkipped ||
-      !this.currentTrack ||
-      (this.currentTrack.source == 0 && m.data.track!.source != 0)
+      (!!this.currentTrack &&
+        this.currentTrack.source == 0 &&
+        m.data.track!.source != 0)
     ) {
       this.reload();
-    } else if (Math.abs(diff) > 8 && !this.isFallback) {
+    } else if (Math.abs(diff) > 8) {
       if (m.data.track!.source == 0) {
         setTimeout(() => {
           this.reload();
