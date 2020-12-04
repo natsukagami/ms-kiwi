@@ -111,7 +111,7 @@ export function QueueBtn({
       onClick={disabled ? undefined : onClick}
     >
       <g
-        class={`stroke-current stroke-15 fill-bg text-white stroke-2 duration-500 transition-all ${hoverClass} ${className}`}
+        class={`stroke-current fill-bg text-white stroke-15 duration-500 transition-all ${hoverClass} ${className}`}
         style="fill-rule:evenodd;clip-rule:evenodd;"
       >
         <rect x="0" y="0" width="256" height="256" stroke="transparent" stroke-width="1" fill="transparent" fill-opacity="0.5" />

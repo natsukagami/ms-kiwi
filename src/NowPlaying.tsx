@@ -282,7 +282,7 @@ function PlayBtn({ onClick, disabled }: BtnProps) {
       onClick={disabled ? undefined : onClick}
     >
       <g
-        class={`stroke-current stroke-15 fill-bg text-white stroke-2 ${hoverClass}`}
+        class={`stroke-current fill-bg text-white stroke-15 ${hoverClass}`}
       >
         <rect x="0" y="0" width="256" height="256" stroke="transparent" stroke-width="1" fill="transparent" fill-opacity="0.5" />
         <path d="M216.2,114.9L39.8,13.1c-10.1-5.8-22.6,1.5-22.6,13.1v203.7c0,11.6,12.6,18.9,22.6,13.1l176.4-101.8
@@ -312,7 +312,7 @@ function PauseBtn({ onClick, disabled }: BtnProps) {
       onClick={disabled ? undefined : onClick}
     >
       <g
-        class={`stroke-current stroke-15 fill-bg text-white stroke-2 ${hoverClass}`}
+        class={`stroke-current fill-bg text-white stroke-15 ${hoverClass}`}
       >
         <rect x="0" y="0" width="256" height="256" stroke="transparent" stroke-width="1" fill="transparent" fill-opacity="0.5" />
         <g>
@@ -354,7 +354,7 @@ function SkipBtn({
       onClick={disabled ? undefined : onClick}
     >
       <g
-        class={`stroke-current stroke-15 fill-bg text-white stroke-2 duration-500 transition-all ${hoverClass} ${className}`}
+        class={`stroke-current fill-bg text-white stroke-15 duration-500 transition-all ${hoverClass} ${className}`}
       >
         <rect x="0" y="0" width="256" height="256" stroke="transparent" stroke-width="1" fill="transparent" fill-opacity="0.5" />
         <path d="M247.7,109.9L143.5,2.5c-3.6-3-8-2.5-11.3-2.5c-13.3,0-13.3,14.6-13.3,18.3v81.3L24.6,2.5C21-0.5,16.6,0,13.3,0
