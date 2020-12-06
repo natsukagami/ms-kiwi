@@ -21,6 +21,8 @@ export default function NowPlaying({ ws, host }: { ws: WS; host: string }) {
   const [queueVisible, setQueueVisible] = useState(false);
   //State: active message
   const [activeMsg, setActiveMsg] = useState<Message | null>(null);
+  // State: current queue
+  const [currentQueue, setCurrentQueue] = useState<TrackMetadata[]>([]);
   // Effect: reload on unload
   useEffect(() => {
     audio.addEventListener(
@@ -31,9 +33,19 @@ export default function NowPlaying({ ws, host }: { ws: WS; host: string }) {
       { once: true }
     );
   }, [audio]);
-  // Effect: trace the currently playing track.
+  // Effect: trace the currently playing track, current queue, and error messages.
   useEffect(() => {
     const remove = ws.addMessageHandler((m: Message) => {
+      if (!m.success && m.reason.length > 0) {
+        setActiveMsg(m);
+        setTimeout(() => {
+          setActiveMsg((oldmsg) => {
+            //Do not remove another active message
+            if (oldmsg === m) return null;
+            return oldmsg;
+          });
+        }, 3000);
+      }
       switch (m.op) {
         case Op.SetClientsTrack:
           console.log(m);
@@ -45,21 +57,22 @@ export default function NowPlaying({ ws, host }: { ws: WS; host: string }) {
           return;
         case Op.ClientRequestTrack:
           return;
+        case Op.TrackEnqueued:
+          setCurrentQueue((oldQueue) => oldQueue.concat(m.data.track!));
+          return;
+        case Op.ClientRemoveTrack:
+          setCurrentQueue(
+            (oldQueue) => oldQueue.filter((t) => t.playId != m.data.track!.playId)
+          );
+          return;
+        case Op.ClientRequestQueue:
+          setCurrentQueue(m.data.queue!);
+          return;
         default:
-          if (!m.success && m.reason.length > 0) {
-            setActiveMsg(m);
-            setTimeout(() => {
-              setActiveMsg((oldmsg) => {
-                //Do not remove another active message
-                if (oldmsg === m) return null;
-                return oldmsg;
-              });
-            }, 3000);
-          }
+          return;
       }
-
     });
-    ws.readyState === ws.OPEN && ws.getPlaying(); // Don't rely on the websocket connection to send you stuff first.
+    ws.readyState === ws.OPEN && ws.getPlaying() && ws.getQueue(); // Don't rely on the websocket connection to send you stuff first.
     return remove;
   }, [ws]);
 
@@ -75,7 +88,7 @@ export default function NowPlaying({ ws, host }: { ws: WS; host: string }) {
       </div> */}
       <div class="flex-shrink overflow-y-hidden rounded p-4 bg-blue flex flex-col z-10 transition-all ease-in-out duration-1000 animate__animated">
         {/* Track Info */}
-        {activeMsg === null ? queueVisible ? (<Queue ws={ws} />) : (
+        {activeMsg === null ? queueVisible ? (<Queue ws={ws} currentQueue={currentQueue} />) : (
           <div class="flex-grow break-words"><Track track={currentTrack} listeners={listeners} /></div>)
           : (<div class="flex flex-col justify-between text-white flex-grow">
             <a class="text-xl text-accent">{activeMsg.reason}</a>

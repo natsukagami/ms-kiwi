@@ -1,39 +1,14 @@
 import { h } from "preact";
-import WS, { Op, Message } from "./server/ws";
-import { useState, useEffect } from "preact/hooks";
+import WS from "./server/ws";
 import TrackMetadata from "./server/track";
 
 /**
  * The Queue box
  * @param ws The websocket connection
+ * @param currentQueue The current track queue
  */
-export default function Queue({ ws }: { ws: WS }) {
-  // State: current queue
-  const [currentQueue, setCurrentQueue] = useState<TrackMetadata[]>([]);
-  // Effect: trace the current queue.
-  useEffect(() => {
-    const remove = ws.addMessageHandler((m: Message) => {
-      switch (m.op) {
-        case Op.TrackEnqueued:
-          setCurrentQueue((oldQueue) => oldQueue.concat(m.data.track!));
-          return;
-        case Op.ClientRemoveTrack:
-          setCurrentQueue(
-            (oldQueue) => oldQueue.filter((t) => t.playId != m.data.track!.playId)
-          );
-          return;
-        case Op.ClientRequestQueue:
-          setCurrentQueue(m.data.queue!);
-          return;
-      }
-    });
-    ws.readyState === ws.OPEN && ws.getQueue(); // Don't rely on the websocket to send us. You might miss it
-    return remove;
-  }, [ws]);
-
+export default function Queue({ ws, currentQueue }: { ws: WS, currentQueue: TrackMetadata[] }) {
   /// Render!
-  // Don't display anything if there's no tracks in queue.
-  // if (currentQueue === null || currentQueue.length <= 0) { return null; }
   return (
     <div class="overflow-x-auto flex flex-col flex-grow text-white animate__animated overflow-y-auto">
       <p class="mx-4 mb-2 text-2xl">{currentQueue.length > 0 ? "In Queue" : "Nothing is in queue"}</p>
