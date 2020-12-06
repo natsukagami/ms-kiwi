@@ -82,10 +82,8 @@ export default function NowPlaying({ ws, host }: { ws: WS; host: string }) {
 
   return (
     <div class="flex flex-col overflow-x-visible flex-grow overflow-y-auto">
+      {/* Lyrics */}
       <LyricsHandle ws={ws} audio={audio} track={currentTrack} />
-      {/* <div class="rounded h-44 flex flex-row">
-        <img src={currentTrack.cover} class="flex-grow object-contain"></img>
-      </div> */}
       <div class="flex-shrink overflow-y-hidden rounded p-4 bg-blue flex flex-col z-10 transition-all ease-in-out duration-1000 animate__animated">
         {/* Track Info */}
         {activeMsg === null ? queueVisible ? (<Queue ws={ws} currentQueue={currentQueue} />) : (

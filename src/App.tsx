@@ -17,12 +17,6 @@ function App({ host }: { host: string }) {
   useEffect(() => {
     ws.addEventListener("close", () => setWs(newWs()), { once: true });
   }, [ws]);
-  /// Current track information.
-  // const [currentTrack, setCurrentTrack] = useState<TrackMetadata | null>(null);
-  /// Queue
-  // const [queue, setQueue] = useState<TrackMetadata[]>([]);
-  /// Listeners count
-  // const [listeners, setListeners] = useState(0);
 
   /// Rendering here
   return (
