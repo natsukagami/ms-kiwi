@@ -36,6 +36,11 @@ export default class AS extends Audio {
       return `/fallback`;
     } else return `/audio`;
   }
+  catchUpLive() {
+    if (this.networkState != this.NETWORK_LOADING) this.reload();
+    if (this.buffered.length > 0)
+      this.fastSeek(this.buffered.end(this.buffered.length - 1));
+  }
   reload() {
     this.src = this.audioPath();
   }
@@ -46,6 +51,8 @@ export default class AS extends Audio {
     this.muted = false;
     if (!this.src) {
       this.src = this.audioPath();
+    } else if (this.paused) {
+      this.play();
     }
   }
   currentTrackTime() {
@@ -72,14 +79,14 @@ export default class AS extends Audio {
         this.currentTrack.source == 0 &&
         m.data.track!.source != 0)
     ) {
-      this.reload();
+      this.catchUpLive();
     } else if (Math.abs(diff) > 8) {
       if (m.data.track!.source == 0) {
         setTimeout(() => {
-          this.reload();
+          this.catchUpLive();
         }, (diff - 3.168) * 1000);
       } else {
-        this.reload();
+        this.catchUpLive();
       }
     }
     this.wasSkipped = false;
