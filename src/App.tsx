@@ -20,7 +20,7 @@ function App({ host }: { host: string }) {
 
   /// Rendering here
   return (
-    <div class="mx-auto md:max-w-screen-md max-w-full px-4 pt-4 h-screen">
+    <div class="mx-auto md:max-w-screen-md max-w-full px-4 pt-4 h-screen font-sans antialiased">
       <div class="w-full h-full flex flex-col">
         {/* Search bar */}
         <Search ws={ws} />
