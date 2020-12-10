@@ -91,5 +91,6 @@ export default class AS extends Audio {
     }
     this.wasSkipped = false;
     this.currentTrack = m.data.track!;
+    this.title = `${this.currentTrack.title} - ${this.currentTrack.artist}`;
   }
 }
