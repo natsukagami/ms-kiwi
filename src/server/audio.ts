@@ -37,9 +37,15 @@ export default class AS extends Audio {
     } else return `/audio`;
   }
   catchUpLive() {
-    if (this.networkState != this.NETWORK_LOADING) this.reload();
-    if (this.buffered.length > 0)
-      this.fastSeek(this.buffered.end(this.buffered.length - 1));
+    if (
+      this.networkState != this.NETWORK_LOADING ||
+      this.readyState != this.HAVE_ENOUGH_DATA
+    )
+      this.load();
+    else {
+      if (this.buffered.length > 0)
+        this.fastSeek(this.buffered.end(this.buffered.length - 1));
+    }
   }
   reload() {
     this.src = this.audioPath();
@@ -50,7 +56,7 @@ export default class AS extends Audio {
   unmute() {
     this.muted = false;
     if (!this.src) {
-      this.src = this.audioPath();
+      this.reload();
     } else if (this.paused) {
       this.play();
     }
