@@ -19,7 +19,7 @@ export default class AS extends Audio {
   constructor({ ws, host }: { ws: WS; host: string }) {
     super();
     Object.setPrototypeOf(this, AS.prototype);
-    ws.addMessageHandler((m) => this.handleMessage(m));
+    ws.addMessageHandler(this.handleMessage.bind(this));
     this.host = host;
     this.delta = 0;
     this.audioStartPos = 0;
@@ -54,11 +54,15 @@ export default class AS extends Audio {
     this.muted = true;
   }
   unmute() {
+    eval("window.audio = this;");
     this.muted = false;
     if (!this.src) {
       this.reload();
+      this.play();
     } else if (this.paused) {
       this.play();
+    } else {
+      this.load();
     }
   }
   currentTrackTime() {

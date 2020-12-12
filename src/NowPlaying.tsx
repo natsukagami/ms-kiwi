@@ -12,7 +12,7 @@ import Queue, { QueueBtn } from "./Queue";
  */
 export default function NowPlaying({ ws, host }: { ws: WS; host: string }) {
   // State: audio!
-  const [audio, setAudio] = useState(() => new AS({ ws, host }));
+  const [audio, setAudio] = useState<AS>(new AS({ ws, host }));
   // State: currently playing track!
   const [currentTrack, setCurrentTrack] = useState<TrackMetadata | null>(null);
   // State: Listener count
@@ -73,6 +73,7 @@ export default function NowPlaying({ ws, host }: { ws: WS; host: string }) {
       }
     });
     ws.readyState === ws.OPEN && ws.getPlaying() && ws.getQueue(); // Don't rely on the websocket connection to send you stuff first.
+    setAudio(new AS({ ws, host }));
     return remove;
   }, [ws]);
 
@@ -200,7 +201,22 @@ function AudioHandle({ audio }: { audio: AS }) {
   // can't really use the audio... we don't know if it's changed.
   const [paused, setPaused] = useState(true);
   const [loading, setLoading] = useState(false);
-
+  const onPlaying = () => {
+    setPaused(false);
+  };
+  const onPaused = () => {
+    setPaused(true);
+  };
+  useEffect(() => {
+    audio.addEventListener("pause", onPaused);
+    audio.addEventListener("playing", onPlaying);
+    const remove = () => {
+      audio.removeEventListener("pause", onPaused);
+      audio.removeEventListener("playing", onPlaying);
+      setPaused(true);
+    }
+    return remove;
+  }, [audio])
   const toggle = () => {
     setLoading(true);
     if (paused) audio.unmute();
