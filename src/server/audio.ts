@@ -58,9 +58,9 @@ export default class AS extends Audio {
     this.muted = false;
     if (!this.src) {
       this.reload();
-      this.play();
+      this.play().catch(() => {});
     } else if (this.paused) {
-      this.play();
+      this.play().catch(() => {});
     } else {
       this.load();
     }
