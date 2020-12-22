@@ -1,5 +1,5 @@
 import { h } from "preact";
-import WS, { Selector, Op, Message } from "./server/ws";
+import WS, { MusicSourceInfo, Op, Message } from "./server/ws";
 import { useState, useEffect } from "preact/hooks";
 import TrackMetadata from "./server/track";
 
@@ -9,25 +9,36 @@ import TrackMetadata from "./server/track";
 export default function Search({ ws }: { ws: WS }) {
   /// State: status of the search
   const [status, setStatus] = useState<SearchStatusProps | null>(null);
+  /// State: sources list
+  const [sources, setSources] = useState<MusicSourceInfo[]>([]);
   /// Effect: search status messages's listener
   useEffect(() => {
     const fn = (m: Message) => {
-      if (m.op !== Op.ClientRequestTrack) return;
-      setStatus(m);
-      setTimeout(() => setStatus((prev) => (prev === m ? null : prev)), 3000);
+      switch (m.op) {
+        case Op.ClientRequestTrack:
+          setStatus(m);
+          setTimeout(() => setStatus((prev) => (prev === m ? null : prev)), 3000);
+          break;
+        case Op.ListSources:
+          setSources(m.data.sources!);
+          break;
+        default:
+          break;
+      }
     };
+    ws.readyState === ws.OPEN && ws.getSourcesList();
     return ws.addMessageHandler(fn);
   }, [ws]);
   // Effect: "send query" binder
-  const query = (query: string, s: Selector) => {
+  const query = (query: string, s: number) => {
     setStatus({ query });
     return ws.requestTrack(query, s);
   };
-
+  if (sources.length <= 0) return null;
   return (
     <div class="flex-grow-0 h-40 overflow-x-hidden flex-shrink-0">
       <div class="z-20 relative">
-        <SearchBar query={query} />
+        <SearchBar query={query} sources={sources} />
       </div>
       <div class="z-auto relative block">
         {status && <SearchStatus {...status} />}
@@ -41,16 +52,18 @@ export default function Search({ ws }: { ws: WS }) {
  * @param query The "call a query" function.
  */
 function SearchBar({
+  sources,
   query,
 }: {
-  query: (query: string, selector: Selector) => void;
+  sources: MusicSourceInfo[];
+  query: (query: string, selector: number) => void;
 }) {
   /// The current query value.
   const [value, setValue] = useState("");
   /// The current selector.
-  const [sel, setSel] = useState<Selector>(() => {
+  const [sel, setSel] = useState<number>(() => {
     let _ = localStorage.getItem("src-selector");
-    return _ && +_ in Selector && +_ || 1;
+    return _ && (+_ >= 0 && +_ < sources.length) && +_ || 0;
   });
 
   /// On-submit handler
@@ -62,24 +75,19 @@ function SearchBar({
     }
   };
 
-  /// Rendering!!
-  const selectors = Object.values(Selector).filter(
-    (v) => typeof v === "string"
-  ) as (keyof typeof Selector)[];
-
   return (
     <form
       class="bg-transparent text-white flex flex-row mt-1 leading-6"
       onSubmit={onSubmit}
     >
-      {selectors.map((s, index) => (
+      {sources.map((s, index) => (
         <SelectBtn
-          selected={sel === Selector[s]}
+          selected={sel === s.id}
           set={() => {
-            localStorage.setItem("src-selector", Selector[s].toString())
-            setSel(Selector[s])
+            localStorage.setItem("src-selector", s.id.toString())
+            setSel(s.id)
           }}
-          text={s}
+          text={s.display_name}
           class={index === 0 ? "rounded-l-15" : ""}
         />
       ))}

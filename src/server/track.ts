@@ -3,7 +3,7 @@
  */
 export default interface TrackMetadata {
   title: string;
-  source: number;
+  is_radio: boolean;
   duration: number;
   artist: string;
   artists: string;

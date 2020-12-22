@@ -86,12 +86,12 @@ export default class AS extends Audio {
     if (
       this.wasSkipped ||
       (!!this.currentTrack &&
-        this.currentTrack.source == 0 &&
-        m.data.track!.source != 0)
+        this.currentTrack.is_radio &&
+        !m.data.track!.is_radio)
     ) {
       this.catchUpLive();
     } else if (Math.abs(diff) > 8) {
-      if (m.data.track!.source == 0) {
+      if (m.data.track!.is_radio) {
         setTimeout(() => {
           this.catchUpLive();
         }, (diff - 3.168) * 1000);

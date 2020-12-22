@@ -49,7 +49,7 @@ export default class WS extends WebSocket {
   }
 
   /** Request a track */
-  requestTrack(query: string, selector: Selector) {
+  requestTrack(query: string, selector: number) {
     let nonce = Math.floor(Math.random() * 1e9);
     this.query({ op: Op.ClientRequestTrack, query, selector, nonce });
     return nonce;
@@ -79,6 +79,11 @@ export default class WS extends WebSocket {
   ping() {
     this.query({ op: Op.WebSocketKeepAlive });
   }
+
+  /** Request sources list */
+  getSourcesList() {
+    this.query({ op: Op.ListSources });
+  }
 }
 
 /**
@@ -87,8 +92,16 @@ export default class WS extends WebSocket {
 interface Query {
   op: number;
   query?: string;
-  selector?: Selector;
+  selector?: number;
   nonce?: number;
+}
+/**
+ * Information about a server's music source
+ */
+export interface MusicSourceInfo {
+  name: string;
+  display_name: string;
+  id: number;
 }
 /**
  * Data trailer from server.
@@ -100,28 +113,21 @@ interface MessageData {
   queue?: TrackMetadata[];
   silent?: boolean;
   startPos?: number;
-}
-
-/**
- * The selector object.
- */
-export enum Selector {
-  DZ = 1,
-  CSN = 2,
-  YT = 3,
+  sources?: MusicSourceInfo[];
 }
 
 export enum Op {
-  SetClientsTrack = 1,
-  AllClientsSkip = 2,
-  ClientRequestTrack = 3,
-  ClientRequestSkip = 4,
-  SetClientsListeners = 5,
-  TrackEnqueued = 6,
-  ClientRequestQueue = 7,
-  WebSocketKeepAlive = 8,
-  ClientRemoveTrack = 9,
-  ClientAudioStartPos = 10,
+  ListSources = 1,
+  SetClientsTrack = 2,
+  AllClientsSkip = 3,
+  ClientRequestTrack = 4,
+  ClientRequestSkip = 5,
+  SetClientsListeners = 6,
+  TrackEnqueued = 7,
+  ClientRequestQueue = 8,
+  WebSocketKeepAlive = 9,
+  ClientRemoveTrack = 10,
+  ClientAudioStartPos = 11,
 }
 
 /** Message represents all kinds of messages sent from the server. */
