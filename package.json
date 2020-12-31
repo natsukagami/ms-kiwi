@@ -1,11 +1,11 @@
 {
   "name": "ms-kiwi",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "A simple React theme for MusicStream",
   "main": "build/index.ts",
   "repository": "https://github.com/natsukagami/ms-kiwi",
   "author": "Natsu Kagami <natsukagami@gmail.com>",
-  "contributors": ["Nguyễn Hoàng Trung <ntrung03@gmail.com>"],
+  "contributors": ["Nguyen Hoang Trung <ntrung03@gmail.com>"],
   "license": "AGPL-3.0-only",
   "private": false,
   "devDependencies": {
