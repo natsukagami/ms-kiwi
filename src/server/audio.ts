@@ -43,8 +43,11 @@ export default class AS extends Audio {
     )
       this.load();
     else {
-      if (this.buffered.length > 0)
+      if (this.buffered.length > 0 && this.fastSeek) {
         this.fastSeek(this.buffered.end(this.buffered.length - 1));
+      } else if (this.buffered.length) {
+        this.reload();
+      }
     }
   }
   reload() {
