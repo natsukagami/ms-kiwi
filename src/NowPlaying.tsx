@@ -46,6 +46,9 @@ export default function NowPlaying({ ws, host }: { ws: WS; host: string }) {
           });
         }, 3000);
       }
+      if (!m.success) {
+        return;
+      }
       switch (m.op) {
         case Op.SetClientsTrack:
           console.log(m);
@@ -229,8 +232,8 @@ function AudioHandle({ audio }: { audio: AS }) {
   return paused ? (
     <PlayBtn onClick={toggle} disabled={loading} />
   ) : (
-      <PauseBtn onClick={toggle} disabled={loading} />
-    );
+    <PauseBtn onClick={toggle} disabled={loading} />
+  );
 }
 
 function Skip({ ws }: { ws: WS }) {

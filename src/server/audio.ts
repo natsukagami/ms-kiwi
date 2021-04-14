@@ -82,7 +82,7 @@ export default class AS extends Audio {
       }
       return;
     }
-    if (m.op != Op.SetClientsTrack) return;
+    if (m.op != Op.SetClientsTrack || !m.success) return;
     let delta = m.data.pos! / 48000.0 + 1.584;
     this.delta = delta;
     let diff = delta - this.currentTime;
