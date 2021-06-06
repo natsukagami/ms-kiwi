@@ -110,6 +110,7 @@ interface MessageData {
   track?: TrackMetadata;
   listeners?: number;
   pos?: number;
+  fallbackpos?: number;
   queue?: TrackMetadata[];
   silent?: boolean;
   startPos?: number;
